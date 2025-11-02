@@ -99,10 +99,10 @@ npx playwright test
 ## 🖼️ Screenshots
 
 ### 🟢 GitHub Actions – Successful Workflow Run  
-![GitHub Actions Success]([screenshots/actions-success.png](https://github.com/irajbhinde/fastapi-calculator/blob/main/actions-success.png))
+![GitHub Actions Success](https://github.com/irajbhinde/fastapi-calculator/blob/main/actions-success.png)
 
 ### 🖥️ App Running in Browser  
-![App Running]([screenshots/app-running.png](https://github.com/irajbhinde/fastapi-calculator/blob/main/app-running.png))
+![App Running](https://github.com/irajbhinde/fastapi-calculator/blob/main/app-running.png)
 
 ---
 
