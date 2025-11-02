@@ -1,0 +1,38 @@
+
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>FastAPI Calculator</title>
+  <style>
+    body { font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif; max-width: 720px; margin: 3rem auto; padding: 0 1rem; }
+    .card { border: 1px solid #ddd; border-radius: 12px; padding: 1rem; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
+    .row { display: flex; gap: 0.75rem; align-items: center; margin-bottom: 0.75rem; }
+    input { padding: 0.5rem; border-radius: 8px; border: 1px solid #ccc; width: 100%; }
+    button { padding: 0.6rem 0.9rem; border: none; border-radius: 10px; cursor: pointer; }
+    button:hover { filter: brightness(0.95); }
+    .ops { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.5rem; margin-top: 0.5rem; }
+    #result { font-weight: 700; margin-top: 0.5rem; }
+    .small { color: #666; font-size: 0.9rem; }
+  </style>
+</head>
+<body>
+  <h1>FastAPI Calculator</h1>
+  <div class="card">
+    <div class="row">
+      <input id="a" type="number" placeholder="Enter a">
+      <input id="b" type="number" placeholder="Enter b">
+    </div>
+    <div class="ops">
+      <button id="btn-add">Add</button>
+      <button id="btn-subtract">Subtract</button>
+      <button id="btn-multiply">Multiply</button>
+      <button id="btn-divide">Divide</button>
+    </div>
+    <div id="result" aria-live="polite"></div>
+    <p class="small">Open devtools console to see network logs.</p>
+  </div>
+  <script src="/static/script.js"></script>
+</body>
+</html>
