@@ -1,52 +1,123 @@
 
-# FastAPI Calculator (with Tests, Logging, and CI)
+# 🧮 FastAPI Calculator
 
-A simple FastAPI-based calculator demonstrating unit, integration, and end-to-end testing with Playwright, plus structured logging and a GitHub Actions CI workflow.
+A simple **FastAPI-based calculator** demonstrating:
+- Unit, integration, and end-to-end testing with **Playwright**
+- Structured logging
+- Continuous Integration with **GitHub Actions**
 
-## Features
-- REST API: `/add`, `/subtract`, `/multiply`, `/divide`, `/health`
-- HTML UI served at `/` with fetch calls to the API
-- Logging to console and `logs/app.log` (rotating)
-- Tests:
-  - Unit tests for pure functions in `app/operations.py`
-  - Integration tests for FastAPI endpoints in `app/main.py`
-  - End-to-end tests (Playwright) that click through the browser UI
-- GitHub Actions CI running all tests on push/PR
+![CI](https://github.com/irajbhinde/fastapi-calculator/actions/workflows/ci.yml/badge.svg)
 
-## Run locally
+---
+
+## 🚀 Features
+
+✅ REST API Endpoints  
+`/add`, `/subtract`, `/multiply`, `/divide`, `/health` where /add, /subtract, /multiply and /divide are POST requests and /health is a GET request
+
+✅ HTML UI  
+Served at `/` — lets you perform arithmetic operations interactively.
+
+✅ Logging  
+All operations and errors are logged to `logs/app.log` (rotating handler).
+
+✅ Tests
+- **Unit tests** → pure functions in `app/operations.py`
+- **Integration tests** → FastAPI endpoints in `app/main.py`
+- **End-to-End tests** → browser automation via Playwright (`tests/e2e/`)
+
+✅ Continuous Integration  
+GitHub Actions workflow runs **pytest** + **Playwright** on every push.
+
+---
+
+## 🧠 Project Structure
+```
+fastapi-calculator/
+├── app/
+│   ├── main.py
+│   ├── operations.py
+│   ├── logger.py
+│   ├── templates/
+│   └── static/
+├── tests/
+│   ├── unit/
+│   ├── integration/
+│   └── e2e/
+├── logs/
+├── .github/workflows/ci.yml
+├── playwright.config.ts
+├── requirements.txt
+├── pytest.ini
+└── README.md
+```
+
+---
+
+## ⚙️ Run Locally
+
+### 1️⃣ Create venv and install dependencies
 ```bash
-python -m venv .venv && source .venv/bin/activate  # Windows: .venv\Scripts\activate
+python -m venv .venv
+# PowerShell:
+.venv\Scripts\Activate.ps1
+# Bash:
+source .venv/Scripts/activate
+
 pip install -r requirements.txt
+```
+
+### 2️⃣ Start the app
+```bash
 uvicorn app.main:app --reload
 ```
-Open http://127.0.0.1:8000/ in your browser.
+Then open [http://127.0.0.1:8000](http://127.0.0.1:8000)
 
-## Run tests (local)
+---
+
+## 🧪 Run Tests
+
+### ✅ Unit + Integration Tests
 ```bash
-# Unit + integration
 pytest -q
+```
 
-# End-to-end (requires Node 18+)
+### ✅ End-to-End Tests (Playwright)
+Start the FastAPI server in one terminal:
+```bash
+uvicorn app.main:app --port 8000
+```
+In another terminal:
+```bash
 npm install -D @playwright/test
 npx playwright install
-# in one terminal, run the server:
-uvicorn app.main:app --port 8000
-# in another terminal:
 npx playwright test
 ```
 
-## CI
-The workflow at `.github/workflows/ci.yml`:
-1. Installs Python deps and runs `pytest`
-2. Installs Playwright + browsers
-3. Starts the FastAPI server
-4. Runs E2E tests
-5. Uploads the Playwright HTML report as an artifact
+---
 
-## Screenshots required for submission
-- **GitHub Actions successful run**: from your repo's *Actions* tab after a green run.
-- **App running in the browser**: a screenshot of the index page with a sample calculation.
+## 🖼️ Screenshots
 
-## Notes
+### 🟢 GitHub Actions – Successful Workflow Run  
+![GitHub Actions Success](screenshots/actions-success.png)
+
+### 🖥️ App Running in Browser  
+![App Running](screenshots/app-running.png)
+
+---
+
+## 📄 Notes
+
 - Division by zero returns HTTP 400 with a helpful message.
-- Numeric inputs are coerced to float; invalid strings raise a 400 from the API.
+- Numeric inputs are coerced to float; invalid inputs raise a 400.
+- Logs saved to `logs/app.log`.
+
+---
+
+## 🌐 Repository
+
+🔗 **GitHub:** [https://github.com/irajbhinde/fastapi-calculator](https://github.com/irajbhinde/fastapi-calculator)
+
+---
+
+**Developed by [@irajbhinde](https://github.com/irajbhinde)**
