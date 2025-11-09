@@ -5,9 +5,6 @@ This repository demonstrates:
 - A **FastAPI-based calculator** application.
 - Integration with **PostgreSQL and pgAdmin** using **Docker Compose**.
 - Logging, automated testing, and CI/CD with GitHub Actions.
-
-![CI](https://github.com/irajbhinde/fastapi-calculator/actions/workflows/ci.yml/badge.svg)
-
 ---
 
 ## 🚀 Features
@@ -99,8 +96,6 @@ Password: postgres
 ---
 
 ## 🧾 SQL Operations
-
-All commands are in [`sql/steps.sql`](sql/steps.sql):
 
 1️⃣ **Create Tables**
 ```sql
