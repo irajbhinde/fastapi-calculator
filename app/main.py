@@ -5,6 +5,8 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from pydantic import BaseModel
 import time
+import os
+from sqlalchemy import create_engine, text
 
 from .operations import add, subtract, multiply, divide
 from .logger import get_logger
@@ -12,6 +14,13 @@ from .logger import get_logger
 logger = get_logger("fastapi-calculator")
 
 app = FastAPI(title="FastAPI Calculator", version="1.0.0")
+
+DATABASE_URL = os.getenv(
+    "DATABASE_URL",
+    "postgresql+psycopg2://postgres:postgres@localhost:5432/fastapi_db"
+)
+
+engine = create_engine(DATABASE_URL, pool_pre_ping=True)
 
 # Static & templates
 app.mount("/static", StaticFiles(directory="app/static"), name="static")
@@ -87,3 +96,16 @@ async def divide_endpoint(data: Operands):
     except Exception as e:
         logger.exception("Divide failed")
         return JSONResponse(status_code=400, content={"detail": str(e)})
+    
+@app.get("/health")
+def health():
+    return {"status": "ok"}
+
+@app.get("/db-ping")
+def db_ping():
+    try:
+        with engine.connect() as conn:
+            conn.execute(text("SELECT 1"))
+        return {"db": "up"}
+    except Exception as e:
+        return JSONResponse(status_code=500, content={"error": str(e)})
