@@ -128,3 +128,13 @@
 2025-11-02 01:19:09,163 | INFO | fastapi-calculator | POST /multiply -> 200 in 1.08ms
 2025-11-02 01:19:09,319 | INFO | fastapi-calculator | Divide: 10.0 / 4.0 = 2.5
 2025-11-02 01:19:09,320 | INFO | fastapi-calculator | POST /divide -> 200 in 1.67ms
+2025-11-02 01:25:04,933 | INFO | fastapi-calculator | GET /add -> 405 in 0.35ms
+2025-11-02 01:25:13,440 | INFO | fastapi-calculator | GET /add -> 405 in 0.50ms
+2025-11-02 01:25:17,896 | INFO | fastapi-calculator | GET /subtract -> 405 in 0.47ms
+2025-11-02 01:25:55,780 | INFO | fastapi-calculator | GET /subtract -> 405 in 0.51ms
+2025-11-02 01:26:19,126 | INFO | fastapi-calculator | GET /health -> 200 in 0.42ms
+2025-11-02 01:26:32,505 | INFO | fastapi-calculator | GET /add -> 405 in 0.25ms
+2025-11-02 01:26:39,367 | INFO | fastapi-calculator | GET /multiply -> 405 in 0.29ms
+2025-11-02 01:27:57,270 | INFO | fastapi-calculator | GET /health -> 200 in 0.60ms
+2025-11-02 01:29:25,783 | INFO | fastapi-calculator | GET /docs -> 200 in 0.28ms
+2025-11-02 01:29:26,030 | INFO | fastapi-calculator | GET /openapi.json -> 200 in 5.66ms

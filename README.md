@@ -1,10 +1,10 @@
 
-# 🧮 FastAPI Calculator
+# 🧮 FastAPI Calculator + 🐘 PostgreSQL Integration (Docker Compose)
 
-A simple **FastAPI-based calculator** demonstrating:
-- Unit, integration, and end-to-end testing with **Playwright**
-- Structured logging
-- Continuous Integration with **GitHub Actions**
+This repository demonstrates:
+- A **FastAPI-based calculator** application.
+- Integration with **PostgreSQL and pgAdmin** using **Docker Compose**.
+- Logging, automated testing, and CI/CD with GitHub Actions.
 
 ![CI](https://github.com/irajbhinde/fastapi-calculator/actions/workflows/ci.yml/badge.svg)
 
@@ -12,112 +12,147 @@ A simple **FastAPI-based calculator** demonstrating:
 
 ## 🚀 Features
 
-✅ REST API Endpoints  
-`/add`, `/subtract`, `/multiply`, `/divide`, `/health` where /add, /subtract, /multiply and /divide are POST requests and /health is a GET request
+✅ **Calculator API**
+- `/add`, `/subtract`, `/multiply`, `/divide`, `/health`  
+  (POST for arithmetic operations, GET for `/health`)
 
-✅ HTML UI  
-Served at `/` — lets you perform arithmetic operations interactively.
+✅ **Docker Integration**
+- Fully containerized setup with FastAPI, PostgreSQL, and pgAdmin.
 
-✅ Logging  
-All operations and errors are logged to `logs/app.log` (rotating handler).
+✅ **Database Operations**
+- SQL queries to create, insert, update, delete, and join data between `users` and `calculations` tables.
 
-✅ Tests
-- **Unit tests** → pure functions in `app/operations.py`
-- **Integration tests** → FastAPI endpoints in `app/main.py`
-- **End-to-End tests** → browser automation via Playwright (`tests/e2e/`)
+✅ **Testing**
+- Unit, integration, and Playwright end-to-end tests.
 
-✅ Continuous Integration  
-GitHub Actions workflow runs **pytest** + **Playwright** on every push.
+✅ **Logging**
+- Logs all API and database activity to `logs/app.log`.
 
 ---
 
 ## 🧠 Project Structure
+
 ```
 fastapi-calculator/
 ├── app/
 │   ├── main.py
 │   ├── operations.py
 │   ├── logger.py
-│   ├── templates/
-│   └── static/
+│   └── DockerFile
+├── sql/
+│   └── steps.sql
 ├── tests/
 │   ├── unit/
 │   ├── integration/
 │   └── e2e/
 ├── logs/
-├── .github/workflows/ci.yml
-├── playwright.config.ts
+├── docker-compose.yml
+├── .env.example
+├── FastAPI_Postgres_Assignment.pdf
 ├── requirements.txt
-├── pytest.ini
 └── README.md
 ```
 
 ---
 
-## ⚙️ Run Locally
+## ⚙️ Run Locally (Without Docker)
 
-### 1️⃣ Create venv and install dependencies
 ```bash
 python -m venv .venv
-# PowerShell:
-.venv\Scripts\Activate.ps1
-# Bash:
-source .venv/Scripts/activate
-
+.venv\Scripts\activate   # or source .venv/bin/activate
 pip install -r requirements.txt
-```
-
-### 2️⃣ Start the app
-```bash
 uvicorn app.main:app --reload
 ```
-Then open [http://127.0.0.1:8000](http://127.0.0.1:8000)
+
+Then open [http://localhost:8000](http://localhost:8000)
 
 ---
 
-## 🧪 Run Tests
+## 🐳 Run with Docker Compose
 
-### ✅ Unit + Integration Tests
 ```bash
-pytest -q
+docker-compose up --build
 ```
 
-### ✅ End-to-End Tests (Playwright)
-Start the FastAPI server in one terminal:
-```bash
-uvicorn app.main:app --port 8000
+Access:
+- FastAPI → [http://localhost:8000](http://localhost:8000)
+- pgAdmin → [http://localhost:5050](http://localhost:5050)
+
+Default credentials (from `.env`):
 ```
-In another terminal:
-```bash
-npm install -D @playwright/test
-npx playwright install
-npx playwright test
+PGADMIN_DEFAULT_EMAIL=admin@example.com
+PGADMIN_DEFAULT_PASSWORD=admin123
+POSTGRES_USER=postgres
+POSTGRES_PASSWORD=postgres
+POSTGRES_DB=fastapi_db
+```
+
+In pgAdmin, connect to:
+```
+Host: db
+Port: 5432
+Database: fastapi_db
+Username: postgres
+Password: postgres
+```
+
+---
+
+## 🧾 SQL Operations
+
+All commands are in [`sql/steps.sql`](sql/steps.sql):
+
+1️⃣ **Create Tables**
+```sql
+CREATE TABLE users (...);
+CREATE TABLE calculations (...);
+```
+
+2️⃣ **Insert Records**
+```sql
+INSERT INTO users (username, email) VALUES ('alice', 'alice@example.com');
+```
+
+3️⃣ **Query Data**
+```sql
+SELECT * FROM users;
+SELECT u.username, c.operation, c.result FROM calculations c JOIN users u ON c.user_id = u.id;
+```
+
+4️⃣ **Update / Delete**
+```sql
+UPDATE calculations SET result = 6 WHERE id = 1;
+DELETE FROM calculations WHERE id = 2;
 ```
 
 ---
 
 ## 🖼️ Screenshots
 
-### 🟢 GitHub Actions – Successful Workflow Run  
-![GitHub Actions Success](https://github.com/irajbhinde/fastapi-calculator/blob/main/actions-success.png)
+### 🧩 Docker & Database Proof
+- ![Create Table](M9_Screenshots/pgAdmin_createQuery.png)
+- ![Insert Records](M9_Screenshots/insertQuery.png)
+- ![Join Query](M9_Screenshots/select_query.png)
+- ![Update Query](M9_Screenshots/updateQuery.png)
+- ![Delete Query](M9_Screenshots/deleteQuery.png)
+- ![FastAPI Health Check](M9_Screenshots/health_dbUp_screenshot.png)
 
-### 🖥️ App Running in Browser  
-![App Running](https://github.com/irajbhinde/fastapi-calculator/blob/main/app-running.png)
+### 🟢 GitHub Actions Workflow  
+![CI Success](https://github.com/irajbhinde/fastapi-calculator/blob/main/actions-success.png)
 
 ---
 
-## 📄 Notes
+## 📄 Documentation
 
-- Division by zero returns HTTP 400 with a helpful message.
-- Numeric inputs are coerced to float; invalid inputs raise a 400.
-- Logs saved to `logs/app.log`.
+Full screenshots and outputs → [`FastAPI_Postgres_Assignment.pdf`](./FastAPI_Postgres_Assignment.pdf)
 
 ---
 
 ## 🌐 Repository
 
-🔗 **GitHub:** [https://github.com/irajbhinde/fastapi-calculator](https://github.com/irajbhinde/fastapi-calculator)
+🔗 **GitHub:** [https://github.com/irajbhinde/fastapi-calculator/tree/docker-postgres-setup](https://github.com/irajbhinde/fastapi-calculator/tree/docker-postgres-setup)
 
 ---
 
-**Developed by [@irajbhinde](https://github.com/irajbhinde)**
+**Developed by [@irajbhinde](https://github.com/irajbhinde)**  
+© 2025 – NJIT Python for Web Development
