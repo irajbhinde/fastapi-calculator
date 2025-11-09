@@ -129,30 +129,8 @@ DELETE FROM calculations WHERE id = 2;
 
 ## 🖼️ Screenshots
 
-### 🧩 Docker & Database Proof
-- ![Create Table](M9_Screenshots/pgAdmin_createQuery.png)
-- ![Insert Records](M9_Screenshots/insertQuery.png)
-- ![Join Query](M9_Screenshots/select_query.png)
-- ![Update Query](M9_Screenshots/updateQuery.png)
-- ![Delete Query](M9_Screenshots/deleteQuery.png)
-- ![FastAPI Health Check](M9_Screenshots/health_dbUp_screenshot.png)
-
-### 🟢 GitHub Actions Workflow  
-![CI Success]([https://github.com/irajbhinde/fastapi-calculator/blob/main/actions-success.png](https://github.com/irajbhinde/fastapi-calculator/blob/postgres-pgAdmin-module9/M9_Screenshots/github_actions_screenshot.png))
-
----
-
-## 📄 Documentation
-
 Full screenshots and outputs → [`FastAPI_Postgres_Assignment.pdf`](./M9_Screenshots/FastAPI_Postgres_Assignment_Screenshots.pdf)
 
+### 🟢 GitHub Actions Workflow  
+![CI Success](https://github.com/irajbhinde/fastapi-calculator/blob/postgres-pgAdmin-module9/M9_Screenshots/github_actions_screenshot.png)
 ---
-
-## 🌐 Repository
-
-🔗 **GitHub:** [[https://github.com/irajbhinde/fastapi-calculator/tree/docker-postgres-setup](https://github.com/irajbhinde/fastapi-calculator/tree/postgres-pgAdmin-module9)]
-
----
-
-**Developed by [@irajbhinde](https://github.com/irajbhinde)**  
-© 2025 – NJIT Python for Web Development
