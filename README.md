@@ -138,19 +138,19 @@ DELETE FROM calculations WHERE id = 2;
 - ![FastAPI Health Check](M9_Screenshots/health_dbUp_screenshot.png)
 
 ### 🟢 GitHub Actions Workflow  
-![CI Success](https://github.com/irajbhinde/fastapi-calculator/blob/main/actions-success.png)
+![CI Success]([https://github.com/irajbhinde/fastapi-calculator/blob/main/actions-success.png](https://github.com/irajbhinde/fastapi-calculator/blob/postgres-pgAdmin-module9/M9_Screenshots/github_actions_screenshot.png))
 
 ---
 
 ## 📄 Documentation
 
-Full screenshots and outputs → [`FastAPI_Postgres_Assignment.pdf`](./FastAPI_Postgres_Assignment.pdf)
+Full screenshots and outputs → [`FastAPI_Postgres_Assignment.pdf`](./M9_Screenshots/FastAPI_Postgres_Assignment_Screenshots.pdf)
 
 ---
 
 ## 🌐 Repository
 
-🔗 **GitHub:** [https://github.com/irajbhinde/fastapi-calculator/tree/docker-postgres-setup](https://github.com/irajbhinde/fastapi-calculator/tree/docker-postgres-setup)
+🔗 **GitHub:** [[https://github.com/irajbhinde/fastapi-calculator/tree/docker-postgres-setup](https://github.com/irajbhinde/fastapi-calculator/tree/postgres-pgAdmin-module9)]
 
 ---
 
