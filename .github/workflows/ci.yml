@@ -48,15 +48,11 @@ jobs:
         with:
           node-version: '20'
 
-      - name: Install Playwright test runner & browsers
+      - name: Install Playwright (runner + browsers + deps)
         run: |
           echo '{}' > package.json
           npm install -D @playwright/test
-
-      - name: Install Playwright browsers
-        uses: microsoft/playwright-github-action@v1
-        with:
-          with-deps: true
+          npx playwright install --with-deps chromium
 
       - name: Start FastAPI server
         run: |
@@ -78,6 +74,7 @@ jobs:
     needs: test
     if: github.event_name == 'push'
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -95,7 +92,7 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: .
-          file: app/DockerFile  # <- change to app/Dockerfile if that's your path
+          file: app/DockerFile  # change to app/Dockerfile if that's your actual path
           push: true
           tags: |
             ${{ secrets.DOCKERHUB_USERNAME }}/fastapi-calculator:latest
