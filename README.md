@@ -5,6 +5,7 @@ This repository demonstrates:
 - Integration with **PostgreSQL and pgAdmin** using **Docker Compose**.
 - A **secure SQLAlchemy User model** with hashed passwords and Pydantic schemas.
 - Logging, automated testing, and CI/CD with **GitHub Actions** and Docker Hub.
+- A published Docker image on Docker Hub: **`rajbhinde/fastapi-calculator`**.
 
 ---
 
@@ -28,6 +29,7 @@ This repository demonstrates:
 
 ✅ **Docker Integration**
 - Fully containerized setup with FastAPI, PostgreSQL, and pgAdmin.
+- CI pipeline builds and pushes images to Docker Hub.
 
 ✅ **Database Operations (Assignment 1)**
 - SQL queries to create, insert, update, delete, and join data between `users` and `calculations` tables.
@@ -117,6 +119,33 @@ Then open:
 
 ---
 
+## 🐳 Prebuilt Docker Image (Docker Hub)
+
+A prebuilt image is available on Docker Hub:
+
+- **Docker Hub repository:**  
+  👉 https://hub.docker.com/r/rajbhinde/fastapi-calculator
+
+### Pull the image
+
+```bash
+docker pull rajbhinde/fastapi-calculator:latest
+``
+---
+
+## 🐳 Run with Docker Compose (App + PostgreSQL + pgAdmin)
+
+```bash
+docker-compose up --build
+```
+
+Access:
+
+- FastAPI → http://localhost:8000
+- pgAdmin → http://localhost:5050
+
+---
+
 ## 🔐 Secure User Model
 
 ### Endpoints
@@ -197,67 +226,6 @@ pytest tests/unit/test_security.py tests/unit/test_schemas.py tests/integration/
 
 ---
 
-## 🐳 Run with Docker Compose
-
-```bash
-docker-compose up --build
-```
-
-Access:
-
-- FastAPI → http://localhost:8000
-- pgAdmin → http://localhost:5050
-
-Default credentials (from `.env`):
-
-```text
-PGADMIN_DEFAULT_EMAIL=admin@example.com
-PGADMIN_DEFAULT_PASSWORD=admin123
-POSTGRES_USER=postgres
-POSTGRES_PASSWORD=postgres
-POSTGRES_DB=fastapi_db
-```
-
-In pgAdmin, connect to:
-
-```text
-Host: db
-Port: 5432
-Database: fastapi_db
-Username: postgres
-Password: postgres
-```
-
----
-
-
-1️⃣ **Create Tables**
-```sql
-CREATE TABLE users (...);
-CREATE TABLE calculations (...);
-```
-
-2️⃣ **Insert Records**
-```sql
-INSERT INTO users (username, email) VALUES ('alice', 'alice@example.com');
-```
-
-3️⃣ **Query Data**
-```sql
-SELECT * FROM users;
-SELECT u.username, c.operation, c.result
-FROM calculations c
-JOIN users u ON c.user_id = u.id;
-```
-
-4️⃣ **Update / Delete**
-```sql
-UPDATE calculations SET result = 6 WHERE id = 1;
-DELETE FROM calculations WHERE id = 2;
-```
-
----
-
 ## 🔁 CI/CD & Docker Hub
 
 The GitHub Actions workflow (`.github/workflows/ci.yml`) does the following:
@@ -273,27 +241,36 @@ The GitHub Actions workflow (`.github/workflows/ci.yml`) does the following:
 
 2. **Build & Push job**
    - Runs after tests succeed on `push`
-   - Logs in to Docker Hub using:
+   - Logs in to Docker Hub using repository secrets:
      - `DOCKERHUB_USERNAME`
-     - `DOCKERHUB_TOKEN` (Docker Hub access token)
+     - `DOCKERHUB_PASSWORD` (Docker Hub access token)
    - Builds the Docker image from `app/DockerFile`
    - Pushes tags:
-     - `${DOCKERHUB_USERNAME}/fastapi-calculator:latest`
-     - `${DOCKERHUB_USERNAME}/fastapi-calculator:${GITHUB_SHA}`
+     - `rajbhinde/fastapi-calculator:latest`
+     - `rajbhinde/fastapi-calculator:${GITHUB_SHA}`
 
-Update the README with your actual Docker Hub repository link where appropriate.
+You can view the built images here:
+
+- **Docker Hub:** https://hub.docker.com/r/rajbhinde/fastapi-calculator
 
 ---
 
 ## 🖼️ Screenshots
 
-Attached in the folders named M9_Screenshots & M10_Screenshots
+Screenshots for the assignment are added under:
+
+- `M9_Screenshots/`
+- `M10_Screenshots/`
 
 ---
 
-## 🌐 Repository
+## 🌐 Repositories & Links
 
-- Main repo:  
-  🔗 **GitHub:** https://github.com/irajbhinde/fastapi-calculator
-- This assignment branch:  
-  🔗 **GitHub (secure user + CI/CD):** https://github.com/irajbhinde/fastapi-calculator/tree/secure-user-ci
+- **GitHub (main repo):**  
+  🔗 https://github.com/irajbhinde/fastapi-calculator
+
+- **GitHub (secure user + CI/CD branch):**  
+  🔗 https://github.com/irajbhinde/fastapi-calculator/tree/secure-user-ci
+
+- **Docker Hub (prebuilt images):**  
+  🔗 https://hub.docker.com/r/rajbhinde/fastapi-calculator
