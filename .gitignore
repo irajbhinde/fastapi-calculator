@@ -1,0 +1,65 @@
+# -------------------------
+# Python
+# -------------------------
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.sqlite3
+
+# Virtual Environment
+.venv/
+env/
+venv/
+
+# Byte-compiled / optimized / DLL files
+*.py[cod]
+*$py.class
+
+# -------------------------
+# Logs
+# -------------------------
+logs/
+*.log
+
+# -------------------------
+# OS / Editor Files
+# -------------------------
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+
+# VSCode
+.vscode/
+
+# -------------------------
+# Playwright
+# -------------------------
+playwright-report/
+test-results/
+*.png
+*.jpg
+.spec.ts
+
+# Node / npm
+node_modules/
+package-lock.json
+
+# -------------------------
+# Docker
+# -------------------------
+*.pid
+docker-compose.override.yml
+
+# -------------------------
+# Environment Variables
+# -------------------------
+.env
+.env.*
+
+# -------------------------
+# Build / Dist
+# -------------------------
+dist/
+build/
