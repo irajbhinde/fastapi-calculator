@@ -6,8 +6,6 @@ This repository demonstrates:
 - A **secure SQLAlchemy User model** with hashed passwords and Pydantic schemas.
 - Logging, automated testing, and CI/CD with **GitHub Actions** and Docker Hub.
 
-![CI](https://github.com/irajbhinde/fastapi-calculator/actions/workflows/ci.yml/badge.svg)
-
 ---
 
 ## 🚀 Features
@@ -232,9 +230,6 @@ Password: postgres
 
 ---
 
-## 🧾 SQL Operations (Assignment 1)
-
-All commands are in [`sql/steps.sql`](sql/steps.sql):
 
 1️⃣ **Create Tables**
 ```sql
@@ -292,27 +287,7 @@ Update the README with your actual Docker Hub repository link where appropriate.
 
 ## 🖼️ Screenshots
 
-### 🧩 Docker & Database Proof (Assignment 1)
-- ![Create Table](M9_Screenshots/pgAdmin_createQuery.png)
-- ![Insert Records](M9_Screenshots/insertQuery.png)
-- ![Join Query](M9_Screenshots/select_query.png)
-- ![Update Query](M9_Screenshots/updateQuery.png)
-- ![Delete Query](M9_Screenshots/deleteQuery.png)
-- ![FastAPI Health Check](M9_Screenshots/health_dbUp_screenshot.png)
-
-### 🔐 Secure User Model (This assignment)
-- ![POST /users](M10_Screenshots/post_request.png)
-- ![GET /users](M10_Screenshots/get_users.png)
-- ![users_secure in pgAdmin](M10_Screenshots/pg_admin.png)
-
-### 🟢 GitHub Actions Workflow
-![CI Success](https://github.com/irajbhinde/fastapi-calculator/blob/main/actions-success.png)
-
----
-
-## 📄 Documentation
-
-Full screenshots and outputs for the database assignment → [`FastAPI_Postgres_Assignment.pdf`](./FastAPI_Postgres_Assignment.pdf)
+Attached in the folders named M9_Screenshots & M10_Screenshots
 
 ---
 
