@@ -51,9 +51,8 @@ jobs:
       - name: Install Playwright (runner + browsers + deps)
         run: |
           echo '{}' > package.json
-          # install BOTH playwright (CLI) and @playwright/test
-          npm install -D playwright @playwright/test
-          npx playwright install --with-deps chromium
+          npm install -D @playwright/test
+          npx --yes playwright@1.46.0 install --with-deps chromium
 
       - name: Start FastAPI server
         run: |
