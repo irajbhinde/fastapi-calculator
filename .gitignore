@@ -38,7 +38,6 @@ Thumbs.db
 # -------------------------
 playwright-report/
 test-results/
-*.png
 *.jpg
 .spec.ts
 
