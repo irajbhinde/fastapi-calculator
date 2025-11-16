@@ -7,6 +7,10 @@ This repository demonstrates:
 - Logging, automated testing, and CI/CD with **GitHub Actions** and Docker Hub.
 - A published Docker image on Docker Hub: **`rajbhinde/fastapi-calculator`**.
 
+Below is the screenshot showing a successful pipeline run:
+
+![GitHub Actions Success](https://github.com/irajbhinde/fastapi-calculator/blob/secure-user-ci/M10_Screenshots/github_actions_success.png)
+
 ---
 
 ## 🚀 Features
