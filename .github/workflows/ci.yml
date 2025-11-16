@@ -51,8 +51,11 @@ jobs:
       - name: Install Playwright (runner + browsers + deps)
         run: |
           echo '{}' > package.json
-          npm install -D @playwright/test
-          npx --yes playwright@1.46.0 install --with-deps chromium
+          # Install both the CLI and the test runner
+          npm install -D playwright @playwright/test
+          # Install browsers + OS deps via the CLI, but call it through node,
+          # not via the "playwright" shell command
+          node node_modules/playwright/cli.js install --with-deps chromium
 
       - name: Start FastAPI server
         run: |
@@ -60,7 +63,9 @@ jobs:
           sleep 5
 
       - name: Run Playwright tests
-        run: npx playwright test
+        run: |
+          # Again, call the CLI directly via node to avoid "playwright: Permission denied"
+          node node_modules/playwright/cli.js test
 
       - name: Upload Playwright report
         if: always()
@@ -92,7 +97,7 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: .
-          file: app/DockerFile  # change to app/Dockerfile if that's your actual path
+          file: app/DockerFile
           push: true
           tags: |
             ${{ secrets.DOCKERHUB_USERNAME }}/fastapi-calculator:latest
