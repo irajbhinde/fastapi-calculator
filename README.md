@@ -171,22 +171,8 @@ fastapi-calculator/
 
 ---
 
-## 📄 Module 11 Submission Requirements Checklist
+## 📄 Module 11 Screenshots
 
-### ✔ Files included:
-- Calculation model  
-- Calculation schemas  
-- Factory  
-- Unit + integration tests  
-- Updated CI workflow  
-- Updated README  
-
-### ✔ Screenshots to include in LMS submission:
-- Successful GitHub Actions workflow  
-- Docker Hub image page  
+Added in the Screenshots folder
 
 ---
-
-## 🧑‍💻 Maintainer
-Developed by **@irajbhinde**  
-GitHub: https://github.com/irajbhinde/fastapi-calculator
