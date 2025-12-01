@@ -250,7 +250,7 @@ Setting up integration tests and using GitHub Actions gave me hands-on experienc
 https://github.com/irajbhinde/fastapi-calculator
 
 🔗 Module 12 Branch:\
-https://github.com/irajbhinde/fastapi-calculator/tree/module-12
+https://github.com/irajbhinde/fastapi-calculator/tree/module12-user-calculation-routes
 
 🔗 Docker Hub:\
 https://hub.docker.com/r/rajbhinde/fastapi-calculator
