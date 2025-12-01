@@ -1,57 +1,43 @@
-# app/calculation_factory.py
-from abc import ABC, abstractmethod
+from __future__ import annotations
+
+from typing import Callable, Union
 
 from .operations import add, subtract, multiply, divide
 from .schemas import CalculationType
 
 
-class CalculationStrategy(ABC):
-    @abstractmethod
-    def compute(self, a: float, b: float) -> float:
-        ...
-
-
-class AddStrategy(CalculationStrategy):
-    def compute(self, a: float, b: float) -> float:
-        return add(a, b)
-
-
-class SubtractStrategy(CalculationStrategy):
-    def compute(self, a: float, b: float) -> float:
-        return subtract(a, b)
-
-
-class MultiplyStrategy(CalculationStrategy):
-    def compute(self, a: float, b: float) -> float:
-        return multiply(a, b)
-
-
-class DivideStrategy(CalculationStrategy):
-    def compute(self, a: float, b: float) -> float:
-        # We rely on Pydantic to prevent b == 0, and operations.divide for logic.
-        return divide(a, b)
+OperationInput = Union[str, CalculationType]
 
 
 class CalculationFactory:
     """
-    Factory for picking the correct calculation strategy based on type.
+    Factory for picking the correct calculation function based on type.
     """
 
-    _strategies: dict[CalculationType, CalculationStrategy] = {
-        CalculationType.ADD: AddStrategy(),
-        CalculationType.SUBTRACT: SubtractStrategy(),
-        CalculationType.MULTIPLY: MultiplyStrategy(),
-        CalculationType.DIVIDE: DivideStrategy(),
-    }
+    @staticmethod
+    def create(operation_type: OperationInput) -> Callable[[float, float], float]:
+        # Normalize input (string or enum) to lowercase string key
+        if isinstance(operation_type, CalculationType):
+            key = operation_type.value
+        else:
+            key = str(operation_type).lower().strip()
+
+        if key == "add":
+            return add
+        elif key in ("sub", "subtract"):
+            return subtract
+        elif key in ("mul", "multiply"):
+            return multiply
+        elif key in ("div", "divide"):
+            return divide
+        else:
+            raise ValueError(f"Unknown calculation type: {operation_type}")
 
     @classmethod
-    def get_strategy(cls, calc_type: CalculationType) -> CalculationStrategy:
-        try:
-            return cls._strategies[calc_type]
-        except KeyError:
-            raise ValueError(f"Unsupported calculation type: {calc_type}")
-
-    @classmethod
-    def compute(cls, a: float, b: float, calc_type: CalculationType) -> float:
-        strategy = cls.get_strategy(calc_type)
-        return strategy.compute(a, b)
+    def compute(cls, a: float, b: float, operation_type: OperationInput) -> float:
+        """
+        Convenience helper used by tests:
+        CalculationFactory.compute(2, 3, CalculationType.ADD) -> 5
+        """
+        func = cls.create(operation_type)
+        return func(a, b)

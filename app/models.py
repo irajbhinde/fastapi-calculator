@@ -33,8 +33,8 @@ class Calculation(Base):
     Stores a single calculator operation.
 
     - `type` is a string like "add", "subtract", "multiply", "divide"
-    - `result` can be stored or computed on demand; here we choose to store it
-    - `user_id` is optional, but if set it references users_secure.id
+    - `result` is stored
+    - `user_id` optionally links to users_secure.id
     """
 
     __tablename__ = "calculations"
@@ -44,6 +44,9 @@ class Calculation(Base):
     b: Mapped[float] = mapped_column(Float, nullable=False)
     type: Mapped[str] = mapped_column(String(20), nullable=False, index=True)
     result: Mapped[Optional[float]] = mapped_column(Float, nullable=True)
+
+    # 👇 NEW optional note column
+    note: Mapped[Optional[str]] = mapped_column(String(255), nullable=True)
 
     user_id: Mapped[Optional[int]] = mapped_column(
         Integer,
@@ -58,7 +61,7 @@ class Calculation(Base):
         nullable=False,
     )
 
-    user: Mapped[Optional[User]] = relationship(
+    user: Mapped[Optional["User"]] = relationship(
         "User",
         back_populates="calculations",
     )
