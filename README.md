@@ -1,178 +1,256 @@
-# 🧮 FastAPI Calculator + 🐘 PostgreSQL + 🔐 Secure Users + 🧩 Calculation Model (Module 11)
+# 🧮 FastAPI Calculator + 🐘 PostgreSQL + 🔐 Secure Users + 🧩 Calculation Model + 🔑 Auth + CRUD API (Modules 9--12)
 
-This repository contains a full FastAPI application enhanced across multiple modules:
-- **Module 9:** SQL operations with PostgreSQL + pgAdmin  
-- **Module 10:** Secure user model with hashing + CI/CD  
-- **Module 11:** Calculation model (SQLAlchemy), Pydantic validation, factory pattern, and full test coverage  
+This repository contains the full backend system developed across
+Modules 9 → 12:
 
-It includes:
-- A calculator API  
-- A secure `User` model  
-- A robust `Calculation` model + factory  
-- Full test suite (unit, integration, e2e)  
-- CI pipeline with PostgreSQL + Playwright  
-- Docker image deployment to Docker Hub  
+# 🚀 Features Overview (Modules 9--12)
 
----
+## ✅ Calculator API
 
-## 🚀 Features Overview
+Basic math operations (add, subtract, multiply, divide) served through
+FastAPI.
 
-### ✅ Calculator API (Module 8)
-Endpoints:
-- `POST /add`
-- `POST /subtract`
-- `POST /multiply`
-- `POST /divide`
-- `GET /health`
+## ✅ PostgreSQL Integration
 
----
+Database fully containerized using Docker Compose.
 
-## 🔐 Secure User Model (Module 10)
+## ✅ Secure User System
 
-### SQLAlchemy `User` model:
-- `id`, `username`, `email`, `password_hash`, `created_at`
-- Unique constraints on username & email
-- Password hashing via Passlib
+-   **POST /users/register** --- Registration\
+-   **POST /users/login** --- Login\
+-   Password hashing using **Passlib**
+-   Unique email + username\
+-   Pydantic validation
 
-### Pydantic Schemas:
-- **UserCreate** → validates username, email, password
-- **UserRead** → safe response (no password hash)
+## ✅ Calculation Model (Module 11)
 
-### Endpoints:
-- `POST /users` → create user
-- `GET /users` → list users
+-   SQLAlchemy model for saved calculations\
+-   Stores: `a`, `b`, `type`, `result`, `user_id`, `timestamp`
+-   Factory pattern used to compute results
+-   Full test suite (schema, logic, DB integration)
 
----
+## ✅ CRUD API (Module 12)
 
-## 🧩 Calculation Model (Module 11)
+Calculation BREAD routes: - **POST /calculations** --- create\
+- **GET /calculations** --- list\
+- **GET /calculations/{id}** --- read\
+- **PUT /calculations/{id}** --- update\
+- **DELETE /calculations/{id}** --- delete
 
-### SQLAlchemy `Calculation` model:
-Fields:
-- `a: float`
-- `b: float`
-- `type: Enum(add, sub, mul, div)`
-- `result: float`
-- `created_at`
-- `user_id` (optional FK)
+## 🔐 Optional Authentication
 
-### Pydantic Schemas:
-- **CalculationType** (Enum)
-- **CalculationCreate**
-- **CalculationRead**
+Module 12 allows login; future Module 13 can lock endpoints using JWT.
 
-### Validation:
-- No division by zero  
-- Only valid operation types allowed  
+## 🧪 Testing
 
-### Factory Pattern:
-`CalculationFactory` determines which operation to use and computes the result.
+-   Unit tests\
+-   Integration tests (requires Postgres)\
+-   Playwright E2E tests\
+-   GitHub Actions automated testing
 
-Example:
-```py
-calc = CalculationFactory.create(a=2, b=3, calc_type="add")
-assert calc.compute() == 5
-```
+## 🐳 Docker + Docker Hub
 
----
+A prebuilt Docker image is automatically generated on every successful
+CI run.
 
-## 🧪 Tests
+------------------------------------------------------------------------
 
-### Unit Tests:
-- Calculation factory  
-- Schemas validation  
-- Security hashing  
-- Arithmetic operations  
+# 📁 Project Structure
 
-### Integration Tests:
-- User model (unique email, hashed password)  
-- Calculation model insert + DB behavior  
-- FastAPI API endpoints  
+    fastapi-calculator/
+    ├── app/
+    │   ├── main.py
+    │   ├── models.py
+    │   ├── schemas.py
+    │   ├── security.py
+    │   ├── calculation_factory.py
+    │   ├── crud.py
+    │   ├── database.py
+    │   ├── operations.py
+    │   ├── logger.py
+    │   └── DockerFile
+    ├── tests/
+    │   ├── unit/
+    │   ├── integration/
+    │   └── e2e/
+    ├── sql/
+    ├── logs/
+    ├── docker-compose.yml
+    ├── requirements.txt
+    ├── README.md
+    └── FastAPI_Postgres_Assignment.pdf
 
-### End-to-End Tests:
-- Playwright tests for calculator UI  
+------------------------------------------------------------------------
 
----
+# ⚙️ Run Locally (Without Docker)
 
-## 🐳 Docker & Docker Compose
-
-### Run Whole Stack:
-```bash
-docker-compose up --build
-```
-
-Services:
-- FastAPI → http://localhost:8000  
-- pgAdmin → http://localhost:5050  
-
----
-
-## 🐋 Docker Hub Image
-
-Pull it:
-```bash
-docker pull rajbhinde/fastapi-calculator:latest
-```
-
-Docker Hub:  
-https://hub.docker.com/r/rajbhinde/fastapi-calculator
-
----
-
-## ⚙️ Local Development
-
-```bash
+``` bash
 python -m venv .venv
-.venv/Scripts/activate
+.venv/Scripts/activate       # Windows
+# source .venv/bin/activate  # macOS/Linux
+
 pip install -r requirements.txt
 uvicorn app.main:app --reload
 ```
 
----
+Open Swagger UI:\
+👉 http://localhost:8000/docs
 
-## 🧠 CI/CD Pipeline
+------------------------------------------------------------------------
 
-The GitHub Actions workflow:
+# 🐳 Run With Docker Compose (Recommended)
 
-✔ Spins up PostgreSQL  
-✔ Installs Python + Node + Playwright  
-✔ Runs unit + integration + e2e tests  
-✔ Builds Docker image  
-✔ Pushes to Docker Hub using repo secrets  
+``` bash
+docker-compose up --build
+```
+
+Then visit:
+
+-   **FastAPI:** http://localhost:8000\
+-   **Swagger Docs:** http://localhost:8000/docs\
+-   **pgAdmin:** http://localhost:5050
+
+Postgres credentials come from `.env`.
+
+------------------------------------------------------------------------
+
+# 🔐 Module 12 --- User Auth Endpoints
+
+## Register
+
+**POST /users/register**
+
+Request:
+
+``` json
+{
+  "username": "alice",
+  "email": "alice@example.com",
+  "password": "mypassword"
+}
+```
+
+Response:
+
+``` json
+{
+  "id": 1,
+  "username": "alice",
+  "email": "alice@example.com",
+  "created_at": "2025-11-16T19:37:32.867729"
+}
+```
+
+## Login
+
+**POST /users/login**
+
+Request:
+
+``` json
+{
+  "email": "alice@example.com",
+  "password": "mypassword"
+}
+```
+
+Response:
+
+``` json
+{
+  "message": "Login successful",
+  "user_id": 1
+}
+```
+
+------------------------------------------------------------------------
+
+# 🧩 Module 12 --- Calculation CRUD API
+
+  Action     Route
+  ---------- -------------------------------
+  ✔ Create   **POST /calculations**
+  ✔ Browse   **GET /calculations**
+  ✔ Read     **GET /calculations/{id}**
+  ✔ Update   **PUT /calculations/{id}**
+  ✔ Delete   **DELETE /calculations/{id}**
+
+All responses validated by `CalculationRead`.
+
+------------------------------------------------------------------------
+
+# 🧪 Module 12 --- Test Suite
+
+## 🟦 Unit Tests
+
+-   Factory pattern\
+-   Arithmetic logic\
+-   Schema validation\
+-   Password hashing
+
+## 🟧 Integration Tests
+
+-   User register + login\
+-   Calculation create + fetch + update + delete\
+-   Database integrity tests\
+-   Validation error handling
+
+Run all tests:
+
+``` bash
+pytest -q
+```
+
+------------------------------------------------------------------------
+
+# 🔁 CI/CD Pipeline (GitHub Actions)
+
+Workflow includes: - Spinning up PostgreSQL\
+- Installing Python + Node + Playwright\
+- Running **unit**, **integration**, and **E2E** tests\
+- Building Docker image\
+- Pushing to Docker Hub
 
 Workflow file: `.github/workflows/ci.yml`
 
----
+------------------------------------------------------------------------
 
-## 📁 Project Structure
+# 🐋 Docker Hub Deployment
 
-```
-fastapi-calculator/
-├── app/
-│   ├── main.py
-│   ├── models.py
-│   ├── schemas.py
-│   ├── security.py
-│   ├── calculation_factory.py
-│   ├── database.py
-│   ├── operations.py
-│   ├── logger.py
-│   └── DockerFile
-├── sql/
-│   └── steps.sql
-├── tests/
-│   ├── unit/
-│   ├── integration/
-│   └── e2e/
-├── logs/
-├── docker-compose.yml
-├── README.md
-└── requirements.txt
+Your auto-built image is available here:
+
+👉 https://hub.docker.com/r/rajbhinde/fastapi-calculator
+
+Pull it:
+
+``` bash
+docker pull rajbhinde/fastapi-calculator:latest
 ```
 
----
+------------------------------------------------------------------------
 
-## 📄 Module 11 Screenshots
+# 📸 Screenshots 
 
-Added in the Screenshots folder
+Saved in path Screenshots/M12_Screenshots
 
----
+------------------------------------------------------------------------
+
+# 🧠 Reflection
+
+During this module, I learned how backend systems grow from basic endpoints into organized, validated, and secure application logic. Building the user registration and login flow showed me why password hashing, input validation, and error handling matter in real projects. I saw how Pydantic schemas keep data in the right format and stop bad input before it gets to the database. Working on the calculation model highlighted the importance of clear data modeling, and using the factory pattern made me realize how good design can make logic simpler and the system easier to expand.
+
+Setting up integration tests and using GitHub Actions gave me hands-on experience with real CI/CD workflows. I worked with environment variables, dockerized PostgreSQL, Playwright browser testing, and automated Docker Hub deployment. There were some tough moments, especially with dependencies, environment problems, and workflow failures, but fixing those issues taught me how professional backend pipelines work. In the end, I built a backend system that is tested, secure, containerized, and always deployed, which made me feel more confident about creating scalable, production-ready services.
+
+
+------------------------------------------------------------------------
+
+# 🌐 Repository Links
+
+🔗 Main Repo:\
+https://github.com/irajbhinde/fastapi-calculator
+
+🔗 Module 12 Branch:\
+https://github.com/irajbhinde/fastapi-calculator/tree/module-12
+
+🔗 Docker Hub:\
+https://hub.docker.com/r/rajbhinde/fastapi-calculator
