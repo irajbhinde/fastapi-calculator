@@ -18,10 +18,9 @@ export default defineConfig({
   ],
 
   webServer: {
-    // ✅ IMPORTANT: point to app.main:app, not root main.py
-    command: "uvicorn app.main:app --host 127.0.0.1 --port 8000",
-    url: "http://127.0.0.1:8000/health",
-    reuseExistingServer: !process.env.CI,
-    timeout: 120_000,
+    command: 'uvicorn app.main:app --host 127.0.0.1 --port 8000',
+    url: 'http://127.0.0.1:8000/health',
+    reuseExistingServer: true, 
+    timeout: 120 * 1000,
   },
 });
