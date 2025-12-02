@@ -1,6 +1,4 @@
-from __future__ import annotations
-
-from typing import Iterable, Optional
+# app/crud.py
 
 from sqlalchemy import select
 from sqlalchemy.orm import Session
@@ -9,16 +7,25 @@ from . import models, schemas, security
 from .calculation_factory import CalculationFactory
 
 
-# ---------------------------
-# User CRUD
-# ---------------------------
+# =========================
+# User CRUD / Auth
+# =========================
+
+def get_user_by_username(db: Session, username: str):
+    stmt = select(models.User).where(models.User.username == username)
+    return db.execute(stmt).scalar_one_or_none()
 
 
-def create_user(db: Session, data: schemas.UserCreate) -> models.User:
+def get_user_by_email(db: Session, email: str):
+    stmt = select(models.User).where(models.User.email == email)
+    return db.execute(stmt).scalar_one_or_none()
+
+
+def create_user(db: Session, user_in: schemas.UserCreate) -> models.User:
     user = models.User(
-        username=data.username,
-        email=data.email,
-        password_hash=security.hash_password(data.password),
+        username=user_in.username,
+        email=user_in.email,
+        password_hash=security.hash_password(user_in.password),
     )
     db.add(user)
     db.commit()
@@ -26,106 +33,128 @@ def create_user(db: Session, data: schemas.UserCreate) -> models.User:
     return user
 
 
-def get_user_by_username(db: Session, username: str) -> Optional[models.User]:
-    stmt = select(models.User).where(models.User.username == username)
-    return db.execute(stmt).scalar_one_or_none()
-
-
-def get_user_by_email(db: Session, email: str) -> Optional[models.User]:
-    stmt = select(models.User).where(models.User.email == email)
-    return db.execute(stmt).scalar_one_or_none()
-
-
-def get_user_by_identifier(db: Session, identifier: str) -> Optional[models.User]:
+# M12-style login (for /users/login, used by integration tests)
+def verify_user_credentials(db: Session, login_in: schemas.UserLogin):
     """
-    Identifier can be username OR email.
+    Accepts 'identifier' which can be username OR email.
     """
-    stmt = select(models.User).where(
-        (models.User.username == identifier) | (models.User.email == identifier)
-    )
-    return db.execute(stmt).scalar_one_or_none()
-
-
-def list_users(db: Session) -> Iterable[models.User]:
-    stmt = select(models.User).order_by(models.User.id)
-    return db.execute(stmt).scalars().all()
-
-
-# ---------------------------
-# Auth helpers
-# ---------------------------
-
-
-def verify_user_credentials(
-    db: Session, data: schemas.UserLogin
-) -> Optional[models.User]:
-    user = get_user_by_identifier(db, data.identifier)
+    # Try username
+    user = get_user_by_username(db, login_in.identifier)
+    if not user:
+        # Fallback to email
+        user = get_user_by_email(db, login_in.identifier)
     if not user:
         return None
-    if not security.verify_password(data.password, user.password_hash):
+
+    if not security.verify_password(login_in.password, user.password_hash):
         return None
+
     return user
 
 
-# ---------------------------
-# Calculation CRUD
-# ---------------------------
+# M13 JWT login (for /login, used by frontend)
+def verify_user_credentials_email(db: Session, login_in: schemas.JwtLogin):
+    user = get_user_by_email(db, login_in.email)
+    if not user:
+        return None
 
+    if not security.verify_password(login_in.password, user.password_hash):
+        return None
+
+    return user
+
+
+# =========================
+# Calculation CRUD
+# =========================
 
 def create_calculation(
-    db: Session, data: schemas.CalculationCreate
+    db: Session,
+    calc_in: schemas.CalculationCreate,
 ) -> models.Calculation:
-    # choose operation via factory
-    operation = CalculationFactory.create(data.type.value)
-    result = operation(data.a, data.b)
+    """
+    Create a calculation record, computing the result via CalculationFactory.
+    """
+    # calc_in.type is CalculationType (Enum), use it directly with the factory
+    result = CalculationFactory.calculate(calc_in.a, calc_in.b, calc_in.type)
 
-    calc = models.Calculation(
-        a=data.a,
-        b=data.b,
-        type=data.type.value,
+    db_calc = models.Calculation(
+        a=calc_in.a,
+        b=calc_in.b,
+        type=calc_in.type.value,  # store "add", "subtract", etc.
         result=result,
-        user_id=data.user_id,
-        note=data.note,
+        note=calc_in.note,
+        user_id=calc_in.user_id,
     )
-    db.add(calc)
+    db.add(db_calc)
     db.commit()
-    db.refresh(calc)
-    return calc
+    db.refresh(db_calc)
+    return db_calc
 
 
-def get_calculation(db: Session, calc_id: int) -> Optional[models.Calculation]:
-    stmt = select(models.Calculation).where(models.Calculation.id == calc_id)
-    return db.execute(stmt).scalar_one_or_none()
+def list_calculations(
+    db: Session,
+    skip: int = 0,
+    limit: int = 100,
+) -> list[models.Calculation]:
+    return (
+        db.query(models.Calculation)
+        .offset(skip)
+        .limit(limit)
+        .all()
+    )
 
 
-def list_calculations(db: Session) -> Iterable[models.Calculation]:
-    stmt = select(models.Calculation).order_by(models.Calculation.id)
-    return db.execute(stmt).scalars().all()
+def get_calculation(db: Session, calculation_id: int) -> models.Calculation | None:
+    return (
+        db.query(models.Calculation)
+        .filter(models.Calculation.id == calculation_id)
+        .first()
+    )
 
 
 def update_calculation(
-    db: Session, calc: models.Calculation, data: schemas.CalculationUpdate
+    db: Session,
+    db_calc: models.Calculation,
+    calc_update: schemas.CalculationUpdate,
 ) -> models.Calculation:
-    if data.a is not None:
-        calc.a = data.a
-    if data.b is not None:
-        calc.b = data.b
-    if data.type is not None:
-        calc.type = data.type.value
-    if data.note is not None:
-        calc.note = data.note
+    """
+    Apply partial update and recompute result if a/b/type changed.
+    """
+    # Track whether we need to recompute result
+    dirty = False
 
-    # recompute result if a/b/type were changed
-    if any([data.a is not None, data.b is not None, data.type is not None]):
-        operation = CalculationFactory.create(calc.type)
-        calc.result = operation(calc.a, calc.b)
+    if calc_update.a is not None:
+        db_calc.a = calc_update.a
+        dirty = True
 
-    db.add(calc)
+    if calc_update.b is not None:
+        db_calc.b = calc_update.b
+        dirty = True
+
+    if calc_update.type is not None:
+        # store lowercase string value in DB
+        db_calc.type = calc_update.type.value
+        dirty = True
+
+    if calc_update.note is not None:
+        db_calc.note = calc_update.note
+
+    if dirty:
+        # Determine CalculationType enum from stored string if needed
+        current_type = (
+            calc_update.type
+            if calc_update.type is not None
+            else schemas.CalculationType(db_calc.type)
+        )
+        result = CalculationFactory.calculate(db_calc.a, db_calc.b, current_type)
+        db_calc.result = result
+
     db.commit()
-    db.refresh(calc)
-    return calc
+    db.refresh(db_calc)
+    return db_calc
 
 
-def delete_calculation(db: Session, calc: models.Calculation) -> None:
-    db.delete(calc)
+def delete_calculation(db: Session, db_calc: models.Calculation) -> None:
+    db.delete(db_calc)
     db.commit()
