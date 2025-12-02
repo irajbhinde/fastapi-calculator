@@ -1,3 +1,4 @@
+# app/calculation_factory.py
 from __future__ import annotations
 
 from typing import Callable, Union
@@ -41,3 +42,10 @@ class CalculationFactory:
         """
         func = cls.create(operation_type)
         return func(a, b)
+
+    @staticmethod
+    def calculate(a: float, b: float, operation_type: OperationInput) -> float:
+        """
+        Alias expected by CRUD and some tests.
+        """
+        return CalculationFactory.compute(a, b, operation_type)
