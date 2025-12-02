@@ -1,61 +1,79 @@
+# app/schemas.py
+
 from __future__ import annotations
 
 from datetime import datetime
 from enum import Enum
-from typing import Optional
+from typing import Annotated, Optional
 
-from pydantic import BaseModel, EmailStr, Field, model_validator
+from pydantic import BaseModel, EmailStr, StringConstraints, model_validator
 
 
-# ---------- User Schemas (keep your existing ones) ----------
+# =========================
+# User Schemas
+# =========================
 
-class UserCreate(BaseModel):
-    username: str = Field(min_length=3, max_length=50)
+class UserBase(BaseModel):
     email: EmailStr
-    password: str = Field(min_length=6, max_length=128)
+    username: Annotated[str, StringConstraints(min_length=3)]
 
 
-class UserRead(BaseModel):
+class UserCreate(UserBase):
+    password: Annotated[str, StringConstraints(min_length=8)]
+
+
+class UserRead(UserBase):
     id: int
-    username: str
-    email: EmailStr
     created_at: datetime
 
     class Config:
-        from_attributes = True
+        orm_mode = True
 
 
+# M12-style login (for /users/login, used by integration tests)
 class UserLogin(BaseModel):
-    identifier: str = Field(
-        ...,
-        description="Username or email",
-        min_length=3,
-    )
-    password: str = Field(min_length=6, max_length=128)
+    # "identifier" can be username OR email
+    identifier: Annotated[str, StringConstraints(min_length=1)]
+    password: Annotated[str, StringConstraints(min_length=1)]
 
 
-# ---------- Calculation Schemas ----------
+# M13 JWT login (for /login, used by frontend)
+class JwtLogin(BaseModel):
+    email: EmailStr
+    password: str
+
+
+# Token returned by JWT endpoints
+class Token(BaseModel):
+    access_token: str
+    token_type: str = "bearer"
+
+
+# =========================
+# Calculation Schemas
+# =========================
 
 class CalculationType(str, Enum):
-    # UPPERCASE names so tests can use CalculationType.ADD etc.
     ADD = "add"
     SUBTRACT = "subtract"
     MULTIPLY = "multiply"
     DIVIDE = "divide"
 
 
-class CalculationCreate(BaseModel):
+class CalculationBase(BaseModel):
     a: float
     b: float
     type: CalculationType
-    user_id: Optional[int] = None
     note: Optional[str] = None
 
+
+class CalculationCreate(CalculationBase):
+    user_id: Optional[int] = None
+
     @model_validator(mode="after")
-    def validate_division(self) -> "CalculationCreate":
-        # Prevent divide-by-zero cases
+    def disallow_divide_by_zero(self):
         if self.type == CalculationType.DIVIDE and self.b == 0:
-            raise ValueError("Divisor 'b' cannot be zero for divide operations")
+            raise ValueError("Division by zero is not allowed.")
         return self
 
 
@@ -65,24 +83,12 @@ class CalculationUpdate(BaseModel):
     type: Optional[CalculationType] = None
     note: Optional[str] = None
 
-    # For this assignment we don't strictly need extra validation here;
-    # tests care about create() divide-by-zero, not update().
-    @model_validator(mode="after")
-    def validate_division(self) -> "CalculationUpdate":
-        if self.type == CalculationType.DIVIDE and self.b == 0:
-            raise ValueError("Divisor 'b' cannot be zero for divide operations")
-        return self
 
-
-class CalculationRead(BaseModel):
+class CalculationRead(CalculationBase):
     id: int
-    a: float
-    b: float
-    type: CalculationType
-    result: Optional[float]
+    result: Optional[float] = None
     user_id: Optional[int] = None
-    note: Optional[str] = None
     created_at: datetime
 
     class Config:
-        from_attributes = True
+        orm_mode = True
