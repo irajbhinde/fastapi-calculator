@@ -1,0 +1,42 @@
+<!-- app/templates/register.html -->
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Register</title>
+    <link rel="stylesheet" href="/static/styles.css" />
+  </head>
+  <body>
+    <div class="auth-container">
+      <h1>Register</h1>
+
+      <form id="register-form" novalidate>
+        <label>
+          Username
+          <!-- 👇 Playwright looks for this exact id -->
+          <input type="text" id="reg-username" required />
+        </label>
+        <label>
+          Email
+          <input type="email" id="reg-email" required />
+        </label>
+        <label>
+          Password
+          <input type="password" id="reg-password" required />
+        </label>
+        <label>
+          Confirm Password
+          <input type="password" id="reg-confirm" required />
+        </label>
+        <button type="submit">Register</button>
+      </form>
+
+      <p id="register-error" style="color: red;"></p>
+      <p id="register-success" style="color: green;"></p>
+
+      <p><a href="/login">Already have an account? Log in</a></p>
+    </div>
+
+    <script src="/static/auth.js"></script>
+  </body>
+</html>
