@@ -1,219 +1,199 @@
-# 📘 FastAPI Calculator --- Full Stack App (Modules 9--13)
 
-A complete calculator web application built using **FastAPI, PostgreSQL,
-SQLAlchemy, Jinja2, JWT Authentication, and Playwright E2E tests**.
+# FastAPI Calculator
 
-This project includes:
+A small full-stack demo application built with **FastAPI**, **PostgreSQL**, and **Playwright** that supports:
 
--   Calculator API (add/subtract/multiply/divide)
--   Database-backed calculation storage
--   User registration (REST + JWT)
--   HTML frontend for Register/Login
--   Static assets (CSS, JS)
--   JWT authentication from frontend (`auth.js`)
--   Full Playwright E2E test suite
+- User registration and login (JWT-based backend, HTML + JS frontend).
+- A calculator for basic operations (add, subtract, multiply, divide).
+- Full **BREAD** (Browse, Read, Edit, Add, Delete) UI for calculation history.
+- End‑to‑end tests using **Playwright**.
+- Continuous Integration with **GitHub Actions**.
+- Containerized deployment with **Docker**.
 
-------------------------------------------------------------------------
+---
 
-## 🚀 Features
+## Tech Stack
 
-### 🔢 Calculator
+- **Backend:** FastAPI, SQLAlchemy 2.x, Pydantic v2
+- **Database:** PostgreSQL (via `psycopg2`)
+- **Auth:** JWT + password hashing
+- **Frontend:** HTML templates + vanilla JS (`auth.js`, `calculations.js`)
+- **Testing:** Pytest, Playwright
+- **CI/CD:** GitHub Actions
+- **Container:** Docker
 
--   Add, subtract, multiply, divide
--   Store and view past calculations
--   Full CRUD operations for saved calculations
+---
 
-### 👤 Users
+## Getting Started (Local Development)
 
-Login options: - **`/users/login`** → Module 12 legacy login
-(identifier + password) - **`/login`** → Module 13 JWT login (email +
-password)
+### Prerequisites
 
-JWT Auth: - **POST `/register`** → Register & return JWT - **POST
-`/login`** → Login & return JWT
+- Python **3.11+**
+- Node.js **18+** and `npm`
+- PostgreSQL running locally (or a remote instance)
+- Optional: `pytest`, `playwright` installed globally
 
-------------------------------------------------------------------------
+### 1. Clone and install dependencies
 
-## 🎨 Frontend Auth Pages
+```bash
+git clone <your-repo-url>.git
+cd fastapi-calculator
 
-### `/register` DOM IDs
+python -m venv .venv
+source .venv/bin/activate  # Windows: .venv\Scripts\activate
 
--   `#reg-username`
--   `#reg-email`
--   `#reg-password`
--   `#reg-confirm`
--   `#register-success`
--   `#register-error`
-
-### `/login` DOM IDs
-
--   `#login-identifier`
--   `#login-password`
--   `#login-success`
--   `#login-error`
-
-**Auth JS (`static/auth.js`)** - Handles form submission - Performs
-login/register requests - Saves JWT to `localStorage.access_token` -
-Updates DOM for Playwright selectors
-
-------------------------------------------------------------------------
-
-# 📂 Project Structure
-
-    app/
-     ├── main.py
-     ├── models.py
-     ├── schemas.py
-     ├── crud.py
-     ├── security.py
-     ├── database.py
-     ├── operations.py
-     ├── calculation_factory.py
-     ├── templates/
-     │    ├── index.html
-     │    ├── login.html
-     │    └── register.html
-     └── static/
-          ├── styles.css
-          └── auth.js
-    tests/
-     ├── integration/
-     ├── unit/
-     └── e2e/
-
-------------------------------------------------------------------------
-
-# 🛠️ Installation
-
-### 1. Create virtual environment
-
-``` bash
-python -m venv venv
-source venv/bin/activate   # Mac/Linux
-venv\Scripts\activate      # Windows
-```
-
-### 2. Install dependencies
-
-``` bash
 pip install -r requirements.txt
+# or install your dependencies as configured in the project
 ```
 
-------------------------------------------------------------------------
+### 2. Configure the database
 
-# 🗄️ Database Setup (PostgreSQL)
+The app uses a `DATABASE_URL` environment variable. For local development, you can use:
 
-Default connection:
-
-    postgresql+psycopg2://postgres:postgres@localhost:5432/fastapi_db
-
-Create database:
-
-``` sql
-CREATE DATABASE fastapi_db;
+```bash
+export DATABASE_URL="postgresql+psycopg2://postgres:postgres@localhost:5432/fastapi_db"
+# Windows PowerShell:
+# $env:DATABASE_URL="postgresql+psycopg2://postgres:postgres@localhost:5432/fastapi_db"
 ```
 
-------------------------------------------------------------------------
+On application import, `app.database.init_db()` creates the required tables:
 
-# 🐳 Docker Setup
+- `users_secure`
+- `calculations`
 
-``` bash
-docker build -t fastapi-calculator .
-docker run -p 8000:8000 fastapi-calculator
-```
+No manual migration step is required for this demo.
 
-------------------------------------------------------------------------
+### 3. Run the application
 
-# ▶️ Run the App
+From the project root:
 
-``` bash
+```bash
 uvicorn app.main:app --reload
 ```
 
-Open in browser:
+By default the app runs at `http://127.0.0.1:8000`.
 
--   **App UI:** http://127.0.0.1:8000\
--   **Docs:** http://127.0.0.1:8000/docs\
--   **Register:** http://127.0.0.1:8000/register\
--   **Login:** http://127.0.0.1:8000/login
+Key routes:
 
-------------------------------------------------------------------------
+- `GET /` – Calculator page
+- `GET /register` – Registration form
+- `GET /login` – Login form
+- `GET /calculations-ui` – Calculations BREAD UI
+- `GET /docs` – Interactive Swagger/OpenAPI docs
 
-# 🔐 JWT Authentication Guide
+---
 
-### Register
+## Running Tests Locally
 
-``` json
-POST /register
-{
-  "username": "alice",
-  "email": "alice@example.com",
-  "password": "secret123"
-}
+### 1. Backend tests (pytest)
+
+With your virtual environment active:
+
+```bash
+pytest
 ```
 
-### Login
+This runs unit and integration tests, including calculator behavior.
 
-``` json
-POST /login
-{
-  "email": "alice@example.com",
-  "password": "secret123"
-}
+### 2. Playwright E2E tests
+
+First, make sure the app is running locally (for example:
+
+```bash
+uvicorn app.main:app --reload
 ```
 
-Token is stored in:
+in one terminal window).
 
-    localStorage.access_token
+Then, in another terminal:
 
-------------------------------------------------------------------------
-
-# 🧪 Testing
-
-### Unit + Integration Tests
-
-``` bash
-pytest -q
-```
-
-### Playwright Tests
-
-``` bash
-npm install
-npx playwright install
+```bash
+npx playwright install  # first time only
 npx playwright test
 ```
 
-------------------------------------------------------------------------
+The E2E suite currently includes:
 
-# 🖼️ GitHub Actions Screenshot
+- `auth.smoke.spec.ts`
+  - Register + login (happy path)
+  - Login with wrong password (negative)
+- `calculations.smoke.spec.ts`
+  - Add → edit → delete calculation (BREAD smoke)
+  - Divide‑by‑zero error (negative)
+- `test_calculator.spec.ts`
+  - Core calculator operations
 
-Add screenshot in:
+---
 
-    Screenshots/M13_Screenshots
+## Docker
 
-------------------------------------------------------------------------
+### Build the image
 
-# 🧮 Module 9--12 Summary
+From the project root:
 
--   Calculator API\
--   PostgreSQL integration\
--   Secure user system\
--   Calculation model\
--   CRUD API\
--   JWT authentication\
--   CI/CD with GitHub Actions\
--   Playwright E2E testing
+```bash
+docker build -t <your-dockerhub-username>/fastapi-calculator:latest .
+```
 
-------------------------------------------------------------------------
+### Run the container
 
-# 🌐 Repository Links
+```bash
+docker run -p 8000:8000 \
+  -e DATABASE_URL="postgresql+psycopg2://postgres:postgres@host.docker.internal:5432/fastapi_db" \
+  <your-dockerhub-username>/fastapi-calculator:latest
+```
 
-**Main Repo:**\
-https://github.com/irajbhinde/fastapi-calculator
+Adjust the `DATABASE_URL` to match your environment (for example, a Docker network or cloud-hosted PostgreSQL instance).
 
-**Module 12 Branch:**\
-https://github.com/irajbhinde/fastapi-calculator/tree/module12-user-calculation-routes
+### Docker Hub
 
-**Docker Hub:**\
-https://hub.docker.com/r/rajbhinde/fastapi-calculator
+Push the image:
+
+```bash
+docker push <your-dockerhub-username>/fastapi-calculator:latest
+```
+
+Docker Hub repository (replace with your actual namespace):
+
+- https://hub.docker.com/r/<your-dockerhub-username>/fastapi-calculator
+
+---
+
+## GitHub Actions (CI/CD)
+
+The repository includes a GitHub Actions workflow that:
+
+1. Installs Python and Node dependencies.
+2. Starts PostgreSQL and configures `DATABASE_URL`.
+3. Runs backend tests and Playwright E2E tests.
+4. Builds the Docker image.
+5. Optionally pushes the image to Docker Hub on successful runs for main branch or tagged releases.
+
+For your report, capture a screenshot of a successful workflow run from the **Actions** tab showing all steps passing.
+
+---
+
+## Frontend BREAD Flow
+
+Once logged in:
+
+1. Navigate to **“Calculations BREAD”** (`/calculations-ui`).
+2. Use the **Add Calculation** form to create a new calculation entry.
+3. Confirm the entry appears in **All Calculations** and use:
+   - **Edit** to populate the edit form and save changes.
+   - **Delete** to remove the calculation.
+4. Use the details section to inspect a single calculation (as supported by `calculations.js`).
+
+These flows are covered by the Playwright smoke tests to ensure the UI and API stay wired correctly.
+
+---
+
+## Screenshots 
+
+Added under M14 Folder of Screenshots
+
+## Reflection 
+
+This project was mainly about getting the whole stack to work together—database models, FastAPI routes, HTML templates, and Playwright tests. The big breakthrough came when we cleaned up the SQLAlchemy setup, making sure there was just one Base and a reliable init_db() call that always created users_secure and calculations before any request or test. Once the database was predictable, the rest was about making sure the frontend and tests matched up: using real IDs instead of guessed labels, showing realistic success and error messages, and writing smoke tests that check behavior without being too fragile.
+
+For testing, the main takeaway was to keep E2E tests simple and flexible at first. Early versions checked for exact strings and specific DOM states that the real UI didn’t always provide, which caused a lot of unnecessary failures. In the end, we focused on the main flows—registering, logging in, BREAD operations, and important negative cases like invalid credentials and divide-by-zero—while letting details like message text or how delete updates the table change as needed. This balance between reliability and flexibility keeps the test suite manageable for a small app like this.
