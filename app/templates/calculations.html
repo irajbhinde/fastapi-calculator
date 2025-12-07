@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Calculations BREAD</title>
+    <link rel="stylesheet" href="../static/styles.css" />
+  </head>
+  <body>
+    <header class="top-nav">
+      <h1>Calculation History (BREAD)</h1>
+      <nav>
+        <a href="/">Calculator</a>
+        <a href="/register">Register</a>
+        <a href="/login">Login</a>
+        <a href="/calculations-ui" class="active">Calculations BREAD</a>
+      </nav>
+    </header>
+
+    <main class="page-container">
+      <!-- Status messages -->
+      <section class="messages">
+        <p id="calc-error" class="error-message"></p>
+        <p id="calc-success" class="success-message"></p>
+      </section>
+
+      <!-- CREATE / ADD -->
+      <section class="card">
+        <h2>Add Calculation</h2>
+        <form id="create-calc-form" novalidate>
+          <div class="form-row">
+            <label for="calc-a">A</label>
+            <input type="number" id="calc-a" step="any" required />
+          </div>
+          <div class="form-row">
+            <label for="calc-b">B</label>
+            <input type="number" id="calc-b" step="any" required />
+          </div>
+          <div class="form-row">
+            <label for="calc-type">Operation</label>
+            <select id="calc-type" required>
+              <option value="add">Add</option>
+              <option value="subtract">Subtract</option>
+              <option value="multiply">Multiply</option>
+              <option value="divide">Divide</option>
+            </select>
+          </div>
+          <div class="form-row">
+            <label for="calc-note">Note (optional)</label>
+            <input type="text" id="calc-note" maxlength="255" />
+          </div>
+          <button type="submit">Create Calculation</button>
+        </form>
+      </section>
+
+      <!-- BROWSE / LIST -->
+      <section class="card">
+        <h2>All Calculations</h2>
+        <button id="reload-calcs-btn" type="button">Reload</button>
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>A</th>
+              <th>B</th>
+              <th>Type</th>
+              <th>Result</th>
+              <th>Note</th>
+              <th>Created</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="calc-table-body">
+            <!-- rows injected by calculations.js -->
+          </tbody>
+        </table>
+      </section>
+
+      <!-- READ / EDIT -->
+      <section class="card">
+        <h2>Edit Calculation</h2>
+        <p id="edit-helper-text">Select a calculation above and click "Edit".</p>
+        <form id="edit-calc-form" novalidate>
+          <input type="hidden" id="edit-calc-id" />
+
+          <div class="form-row">
+            <label for="edit-a">A</label>
+            <input type="number" id="edit-a" step="any" />
+          </div>
+          <div class="form-row">
+            <label for="edit-b">B</label>
+            <input type="number" id="edit-b" step="any" />
+          </div>
+          <div class="form-row">
+            <label for="edit-type">Operation</label>
+            <select id="edit-type">
+              <option value="">(no change)</option>
+              <option value="add">Add</option>
+              <option value="subtract">Subtract</option>
+              <option value="multiply">Multiply</option>
+              <option value="divide">Divide</option>
+            </select>
+          </div>
+          <div class="form-row">
+            <label for="edit-note">Note</label>
+            <input type="text" id="edit-note" maxlength="255" />
+          </div>
+          <button type="submit">Save Changes</button>
+        </form>
+
+        <!-- READ details -->
+        <div id="calc-details" class="details-box">
+          <!-- Filled when "View" is clicked -->
+        </div>
+      </section>
+    </main>
+
+    <script src="/static/calculations.js"></script>
+  </body>
+</html>

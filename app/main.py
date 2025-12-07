@@ -24,7 +24,7 @@ from sqlalchemy.orm import Session
 from .database import engine, get_db, init_db
 from .logger import get_logger
 from .operations import add, subtract, multiply, divide
-from . import crud, schemas, security
+from . import crud, models, schemas, security
 
 logger = get_logger("fastapi-calculator")
 
@@ -516,3 +516,10 @@ def debug_routes():
             )
     return routes_info
 
+@app.get("/calculations-ui", response_class=HTMLResponse)
+async def calculations_ui(request: Request):
+    """
+    Front-end page for full BREAD operations on calculations.
+    Uses /calculations API under the hood.
+    """
+    return templates.TemplateResponse("calculations.html", {"request": request})
