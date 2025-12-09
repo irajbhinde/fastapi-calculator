@@ -1,199 +1,108 @@
+# FastAPI Calculator – Extended with Power Operation & Usage Stats
 
-# FastAPI Calculator
+This project is a full‑stack FastAPI application integrating:
 
-A small full-stack demo application built with **FastAPI**, **PostgreSQL**, and **Playwright** that supports:
-
-- User registration and login (JWT-based backend, HTML + JS frontend).
-- A calculator for basic operations (add, subtract, multiply, divide).
-- Full **BREAD** (Browse, Read, Edit, Add, Delete) UI for calculation history.
-- End‑to‑end tests using **Playwright**.
-- Continuous Integration with **GitHub Actions**.
-- Containerized deployment with **Docker**.
-
----
-
-## Tech Stack
-
-- **Backend:** FastAPI, SQLAlchemy 2.x, Pydantic v2
-- **Database:** PostgreSQL (via `psycopg2`)
-- **Auth:** JWT + password hashing
-- **Frontend:** HTML templates + vanilla JS (`auth.js`, `calculations.js`)
-- **Testing:** Pytest, Playwright
-- **CI/CD:** GitHub Actions
-- **Container:** Docker
+- User authentication (JWT)
+- Calculator operations (add, subtract, multiply, divide, **power**)
+- Full BREAD (Browse, Read, Edit, Add, Delete) interface for calculations
+- Usage statistics reporting
+- PostgreSQL via SQLAlchemy
+- End‑to‑end testing using Playwright
+- CI/CD with GitHub Actions
+- Dockerized deployment
 
 ---
 
-## Getting Started (Local Development)
+## New Features (Implemented)
 
-### Prerequisites
+### **1. Additional Calculation Type — Power (Exponentiation)**
 
-- Python **3.11+**
-- Node.js **18+** and `npm`
-- PostgreSQL running locally (or a remote instance)
-- Optional: `pytest`, `playwright` installed globally
+The app now supports an advanced operation `power` that computes **a^b**.
 
-### 1. Clone and install dependencies
+#### 🔧 Backend
+- Implemented in `app/operations.py` as `power(a, b)`.
+- Integrated into the calculator factory in `app/calculation_factory.py`.
+- New route:  
+  **POST `/power`**  
+  Returns the computed exponentiation value.
 
-```bash
-git clone <your-repo-url>.git
-cd fastapi-calculator
-
-python -m venv .venv
-source .venv/bin/activate  # Windows: .venv\Scripts\activate
-
-pip install -r requirements.txt
-# or install your dependencies as configured in the project
+Example (PowerShell):
+```powershell
+Invoke-RestMethod -Method Post -Uri http://127.0.0.1:8000/power -ContentType 'application/json' -Body '{"a":2,"b":3}'
+# -> { "result": 8.0 }
 ```
 
-### 2. Configure the database
+#### 🎨 Frontend
+- Added a **Power** operation button on the main calculator page (`/`).
+- Wired via `app/static/script.js`.
 
-The app uses a `DATABASE_URL` environment variable. For local development, you can use:
+#### 🧪 Tests
+- **Unit:** `tests/unit/test_operations.py` validates exponentiation logic.
+- **Integration:** `tests/integration/test_api.py` includes `POST /power` route tests.
+- **E2E:** Playwright tests validate the UI flow involving Power.
 
-```bash
-export DATABASE_URL="postgresql+psycopg2://postgres:postgres@localhost:5432/fastapi_db"
-# Windows PowerShell:
-# $env:DATABASE_URL="postgresql+psycopg2://postgres:postgres@localhost:5432/fastapi_db"
-```
+---
 
-On application import, `app.database.init_db()` creates the required tables:
+### **2. Report / History Feature — Usage Statistics**
 
-- `users_secure`
-- `calculations`
+The application now tracks total and per‑operation usage.
 
-No manual migration step is required for this demo.
+#### 🔧 Backend
+A new API endpoint:
 
-### 3. Run the application
+**GET `/api/calculations/stats`**
 
-From the project root:
+Returns:
+- `total_calculations`
+- Per‑operation counts: add, subtract, multiply, divide, **power**
+- Averages of A, B, and result
 
-```bash
+#### 🎨 Frontend
+The **Calculations BREAD** page (`/calculations-ui`) now includes a **Usage Stats** card.  
+Implemented in: `app/static/calculations.js`
+
+#### 🧪 Tests
+- **Unit:** verifies aggregation logic in CRUD
+- **Integration:** confirms stats route responses
+- **E2E:** validates stats updates through BREAD flow
+
+---
+
+## Run Locally
+
+### Start backend
+```powershell
 uvicorn app.main:app --reload
 ```
 
-By default the app runs at `http://127.0.0.1:8000`.
+### Test Power endpoint
+```powershell
+Invoke-RestMethod -Method Post -Uri http://127.0.0.1:8000/power -ContentType 'application/json' -Body '{"a":5,"b":2}'
+```
 
-Key routes:
+### Use Power in UI
+Visit:
+```
+http://127.0.0.1:8000/
+```
 
-- `GET /` – Calculator page
-- `GET /register` – Registration form
-- `GET /login` – Login form
-- `GET /calculations-ui` – Calculations BREAD UI
-- `GET /docs` – Interactive Swagger/OpenAPI docs
+### Fetch Stats
+```powershell
+Invoke-RestMethod http://127.0.0.1:8000/api/calculations/stats | ConvertTo-Json
+```
 
----
-
-## Running Tests Locally
-
-### 1. Backend tests (pytest)
-
-With your virtual environment active:
-
-```bash
+### Run Tests
+```powershell
 pytest
-```
-
-This runs unit and integration tests, including calculator behavior.
-
-### 2. Playwright E2E tests
-
-First, make sure the app is running locally (for example:
-
-```bash
-uvicorn app.main:app --reload
-```
-
-in one terminal window).
-
-Then, in another terminal:
-
-```bash
-npx playwright install  # first time only
+npx playwright install
 npx playwright test
 ```
 
-The E2E suite currently includes:
-
-- `auth.smoke.spec.ts`
-  - Register + login (happy path)
-  - Login with wrong password (negative)
-- `calculations.smoke.spec.ts`
-  - Add → edit → delete calculation (BREAD smoke)
-  - Divide‑by‑zero error (negative)
-- `test_calculator.spec.ts`
-  - Core calculator operations
-
 ---
 
-## Docker
+## Reflection
 
-### Build the image
+Building the Power feature expanded the calculator from basic operations to advanced computation. This required aligned updates across back‑end logic, schemas, routing, UI behavior, and all test layers. Ensuring the calculation factory and UI events remained consistent was key.
 
-From the project root:
+The usage statistics system added real analytical capability to the project, requiring careful DB aggregation and clear UI presentation. Validating these interactions through unit, integration, and E2E tests helped create a more production‑ready feature set overall.
 
-```bash
-docker build -t <your-dockerhub-username>/fastapi-calculator:latest .
-```
-
-### Run the container
-
-```bash
-docker run -p 8000:8000 \
-  -e DATABASE_URL="postgresql+psycopg2://postgres:postgres@host.docker.internal:5432/fastapi_db" \
-  <your-dockerhub-username>/fastapi-calculator:latest
-```
-
-Adjust the `DATABASE_URL` to match your environment (for example, a Docker network or cloud-hosted PostgreSQL instance).
-
-### Docker Hub
-
-Push the image:
-
-```bash
-docker push <your-dockerhub-username>/fastapi-calculator:latest
-```
-
-Docker Hub repository (replace with your actual namespace):
-
-- https://hub.docker.com/r/<your-dockerhub-username>/fastapi-calculator
-
----
-
-## GitHub Actions (CI/CD)
-
-The repository includes a GitHub Actions workflow that:
-
-1. Installs Python and Node dependencies.
-2. Starts PostgreSQL and configures `DATABASE_URL`.
-3. Runs backend tests and Playwright E2E tests.
-4. Builds the Docker image.
-5. Optionally pushes the image to Docker Hub on successful runs for main branch or tagged releases.
-
-For your report, capture a screenshot of a successful workflow run from the **Actions** tab showing all steps passing.
-
----
-
-## Frontend BREAD Flow
-
-Once logged in:
-
-1. Navigate to **“Calculations BREAD”** (`/calculations-ui`).
-2. Use the **Add Calculation** form to create a new calculation entry.
-3. Confirm the entry appears in **All Calculations** and use:
-   - **Edit** to populate the edit form and save changes.
-   - **Delete** to remove the calculation.
-4. Use the details section to inspect a single calculation (as supported by `calculations.js`).
-
-These flows are covered by the Playwright smoke tests to ensure the UI and API stay wired correctly.
-
----
-
-## Screenshots 
-
-Added under M14 Folder of Screenshots
-
-## Reflection 
-
-This project was mainly about getting the whole stack to work together - database models, FastAPI routes, HTML templates, and Playwright tests. The big breakthrough came when we cleaned up the SQLAlchemy setup, making sure there was just one Base and a reliable init_db() call that always created users_secure and calculations before any request or test. Once the database was predictable, the rest was about making sure the frontend and tests matched up: using real IDs instead of guessed labels, showing realistic success and error messages, and writing smoke tests that check behavior without being too fragile.
-
-For testing, the main takeaway was to keep E2E tests simple and flexible at first. Early versions checked for exact strings and specific DOM states that the real UI didn’t always provide, which caused a lot of unnecessary failures. In the end, we focused on the main flows - registering, logging in, BREAD operations, and important negative cases like invalid credentials and divide-by-zero, while letting details like message text or how delete updates the table change as needed. This balance between reliability and flexibility keeps the test suite manageable for a small app like this.
