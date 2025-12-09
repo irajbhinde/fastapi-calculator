@@ -23,6 +23,52 @@
         <p id="calc-success" class="success-message"></p>
       </section>
 
+    <!-- Status messages -->
+<section class="messages">
+  <p id="calc-error" class="error-message"></p>
+  <p id="calc-success" class="success-message"></p>
+</section>
+
+<!-- NEW: Usage stats / report -->
+<section class="card" id="calc-stats-card">
+  <h2>Usage Stats</h2>
+  <div class="stats-grid">
+    <div class="stat-item">
+      <span class="stat-label">Total Calculations</span>
+      <span id="stat-total-calcs" class="stat-value">0</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-label">Adds</span>
+      <span id="stat-add-count" class="stat-value">0</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-label">Subtracts</span>
+      <span id="stat-subtract-count" class="stat-value">0</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-label">Multiplies</span>
+      <span id="stat-multiply-count" class="stat-value">0</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-label">Divides</span>
+      <span id="stat-divide-count" class="stat-value">0</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-label">Avg A</span>
+      <span id="stat-avg-a" class="stat-value">–</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-label">Avg B</span>
+      <span id="stat-avg-b" class="stat-value">–</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-label">Avg Result</span>
+      <span id="stat-avg-result" class="stat-value">–</span>
+    </div>
+  </div>
+</section>
+
+
       <!-- CREATE / ADD -->
       <section class="card">
         <h2>Add Calculation</h2>
