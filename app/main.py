@@ -523,3 +523,10 @@ async def calculations_ui(request: Request):
     Uses /calculations API under the hood.
     """
     return templates.TemplateResponse("calculations.html", {"request": request})
+
+@app.get("/api/calculations/stats", response_model=schemas.CalculationStats)
+def get_calculations_stats(db: Session = Depends(get_db)):
+    """
+    Return global usage stats for all calculations in the system.
+    """
+    return crud.get_calculation_stats(db)
