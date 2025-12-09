@@ -27,7 +27,7 @@ class UserRead(UserBase):
     created_at: datetime
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 
 # M12-style login (for /users/login, used by integration tests)
@@ -58,6 +58,7 @@ class CalculationType(str, Enum):
     SUBTRACT = "subtract"
     MULTIPLY = "multiply"
     DIVIDE = "divide"
+    POWER = "power"
 
 
 class CalculationBase(BaseModel):
@@ -91,7 +92,7 @@ class CalculationRead(CalculationBase):
     created_at: datetime
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 class CalculationStats(BaseModel):
     total_calculations: int
@@ -99,6 +100,7 @@ class CalculationStats(BaseModel):
     subtract_count: int
     multiply_count: int
     divide_count: int
+    power_count: int
     average_a: Optional[float]
     average_b: Optional[float]
     average_result: Optional[float]

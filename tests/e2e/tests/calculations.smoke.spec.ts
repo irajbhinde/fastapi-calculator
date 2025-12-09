@@ -96,6 +96,18 @@ test('user can add, see, edit, and delete a calculation (smoke BREAD)', async ({
   const editButton = row.getByRole('button', { name: /edit/i });
   await editButton.click();
 
+  // ---------- CREATE power ----------
+  await aInput.fill('2');
+  await bInput.fill('3');
+  await typeSelect.selectOption('power');
+  await noteInput.fill('power e2e');
+  await submitButton.click();
+
+  const pwRow = page
+    .locator('#calc-table-body tr', { hasText: 'power e2e' })
+    .first();
+  await expect(pwRow).toBeVisible();
+
 });
 
 test('cannot divide by zero (negative case)', async ({ page }) => {

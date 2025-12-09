@@ -182,6 +182,7 @@ def get_calculation_stats(db: Session) -> schemas.CalculationStats:
         subtract_count=_ct("subtract"),
         multiply_count=_ct("multiply"),
         divide_count=_ct("divide"),
+        power_count=_ct("power"),
         average_a=float(avg_a) if avg_a is not None else None,
         average_b=float(avg_b) if avg_b is not None else None,
         average_result=float(avg_res) if avg_res is not None else None,

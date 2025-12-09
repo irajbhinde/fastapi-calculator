@@ -29,7 +29,7 @@ def test_factory_divide():
 def test_factory_invalid_type():
     with pytest.raises(ValueError):
         # type: ignore[arg-type]  # simulate a bad type
-        CalculationFactory.compute(1, 2, "power")  # not in CalculationType
+        CalculationFactory.compute(1, 2, "unknown")  # not a valid operation
 
 
 def test_calculation_create_disallows_divide_by_zero():

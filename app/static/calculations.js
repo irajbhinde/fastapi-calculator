@@ -338,6 +338,7 @@ function renderCalculationStats(stats) {
   setText("stat-subtract-count", stats.subtract_count);
   setText("stat-multiply-count", stats.multiply_count);
   setText("stat-divide-count", stats.divide_count);
+  setText("stat-power-count", stats.power_count);
   setText("stat-avg-a", stats.average_a?.toFixed?.(2) ?? stats.average_a);
   setText("stat-avg-b", stats.average_b?.toFixed?.(2) ?? stats.average_b);
   setText(

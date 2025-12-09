@@ -23,3 +23,7 @@ def divide(a: Number, b: Number) -> float:
     if b_val == 0:
         raise ZeroDivisionError("Division by zero")
     return _coerce(a) / b_val
+
+def power(a: Number, b: Number) -> float:
+    """Return a ** b. Coerces inputs to float first."""
+    return _coerce(a) ** _coerce(b)

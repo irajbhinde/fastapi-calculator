@@ -3,7 +3,7 @@ from __future__ import annotations
 
 from typing import Callable, Union
 
-from .operations import add, subtract, multiply, divide
+from .operations import add, subtract, multiply, divide, power
 from .schemas import CalculationType
 
 
@@ -31,6 +31,8 @@ class CalculationFactory:
             return multiply
         elif key in ("div", "divide"):
             return divide
+        elif key in ("pow", "power"):
+            return power
         else:
             raise ValueError(f"Unknown calculation type: {operation_type}")
 

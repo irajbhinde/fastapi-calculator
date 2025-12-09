@@ -25,6 +25,7 @@ from .database import engine, get_db, init_db
 from .logger import get_logger
 from .operations import add, subtract, multiply, divide
 from . import crud, models, schemas, security
+from .operations import power
 
 logger = get_logger("fastapi-calculator")
 
@@ -142,6 +143,17 @@ async def divide_endpoint(data: Operands):
         return JSONResponse(status_code=400, content={"detail": str(zde)})
     except Exception as e:
         logger.exception("Divide failed")
+        return JSONResponse(status_code=400, content={"detail": str(e)})
+
+
+@app.post("/power")
+async def power_endpoint(data: Operands):
+    try:
+        result = power(data.a, data.b)
+        logger.info("Power: %s ** %s = %s", data.a, data.b, result)
+        return {"result": result}
+    except Exception as e:
+        logger.exception("Power failed")
         return JSONResponse(status_code=400, content={"detail": str(e)})
 
 
