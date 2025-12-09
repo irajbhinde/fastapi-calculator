@@ -1,8 +1,7 @@
 # app/crud.py
 
-from sqlalchemy import select
 from sqlalchemy.orm import Session
-
+from sqlalchemy import func, select
 from . import models, schemas, security
 from .calculation_factory import CalculationFactory
 
@@ -158,3 +157,32 @@ def update_calculation(
 def delete_calculation(db: Session, db_calc: models.Calculation) -> None:
     db.delete(db_calc)
     db.commit()
+
+def get_calculation_stats(db: Session) -> schemas.CalculationStats:
+    total = db.query(func.count(models.Calculation.id)).scalar() or 0
+
+    per_type = dict(
+        db.query(models.Calculation.type, func.count(models.Calculation.id))
+        .group_by(models.Calculation.type)
+        .all()
+    )
+
+    avg_a, avg_b, avg_res = db.query(
+        func.avg(models.Calculation.a),
+        func.avg(models.Calculation.b),
+        func.avg(models.Calculation.result),
+    ).one()
+
+    def _ct(key: str) -> int:
+        return int(per_type.get(key, 0) or 0)
+
+    return schemas.CalculationStats(
+        total_calculations=int(total),
+        add_count=_ct("add"),
+        subtract_count=_ct("subtract"),
+        multiply_count=_ct("multiply"),
+        divide_count=_ct("divide"),
+        average_a=float(avg_a) if avg_a is not None else None,
+        average_b=float(avg_b) if avg_b is not None else None,
+        average_result=float(avg_res) if avg_res is not None else None,
+    )
