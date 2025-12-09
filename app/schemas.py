@@ -92,3 +92,13 @@ class CalculationRead(CalculationBase):
 
     class Config:
         orm_mode = True
+
+class CalculationStats(BaseModel):
+    total_calculations: int
+    add_count: int
+    subtract_count: int
+    multiply_count: int
+    divide_count: int
+    average_a: Optional[float]
+    average_b: Optional[float]
+    average_result: Optional[float]
