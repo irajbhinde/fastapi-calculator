@@ -157,6 +157,7 @@ document.addEventListener("DOMContentLoaded", () => {
       // reset note only so user can quickly add more
       noteInput.value = "";
       await loadCalculations();
+      await fetchCalculationStats();  
     } catch (err) {
       console.error(err);
       setError("Network error while creating calculation.");
@@ -213,6 +214,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         setSuccess(`Calculation #${id} deleted successfully.`);
         await loadCalculations();
+        await fetchCalculationStats();  
       } catch (err) {
         console.error(err);
         setError("Network error while deleting calculation.");
@@ -287,6 +289,7 @@ document.addEventListener("DOMContentLoaded", () => {
       await resp.json();
       setSuccess(`Calculation #${id} updated successfully.`);
       await loadCalculations();
+      await fetchCalculationStats(); 
     } catch (err) {
       console.error(err);
       setError("Network error while updating calculation.");
@@ -300,4 +303,50 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Initial load
   loadCalculations();
+});
+
+
+// --- Usage stats / report ---
+
+async function fetchCalculationStats() {
+  try {
+    const resp = await fetch("/api/calculations/stats");
+    if (!resp.ok) {
+      throw new Error("Failed to load stats");
+    }
+    const data = await resp.json();
+    renderCalculationStats(data);
+  } catch (err) {
+    console.error("Error fetching stats", err);
+    const el = document.getElementById("calc-error");
+    if (el) {
+      el.textContent = "Failed to load stats.";
+    }
+  }
+}
+
+function renderCalculationStats(stats) {
+  const setText = (id, value) => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.textContent =
+      value === null || value === undefined ? "–" : String(value);
+  };
+
+  setText("stat-total-calcs", stats.total_calculations);
+  setText("stat-add-count", stats.add_count);
+  setText("stat-subtract-count", stats.subtract_count);
+  setText("stat-multiply-count", stats.multiply_count);
+  setText("stat-divide-count", stats.divide_count);
+  setText("stat-avg-a", stats.average_a?.toFixed?.(2) ?? stats.average_a);
+  setText("stat-avg-b", stats.average_b?.toFixed?.(2) ?? stats.average_b);
+  setText(
+    "stat-avg-result",
+    stats.average_result?.toFixed?.(2) ?? stats.average_result
+  );
+}
+
+// Make sure stats load on page load
+document.addEventListener("DOMContentLoaded", () => {
+  fetchCalculationStats();
 });
