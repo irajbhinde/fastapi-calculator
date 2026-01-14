@@ -1,0 +1,370 @@
+/* =======================
+   RESET / GLOBAL
+   ======================= */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body {
+  height: 100%;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+    sans-serif;
+}
+
+body {
+  background: #f3f4ff;
+  color: #1f2933;
+}
+
+/* Links */
+a {
+  color: #2563eb;
+  text-decoration: none;
+  font-size: 0.9rem;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+/* =======================
+   TOP NAVIGATION
+   ======================= */
+
+.top-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem 2rem;
+  background: #ffffff;
+  box-shadow: 0 1px 4px rgba(15, 23, 42, 0.08);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.top-nav h1 {
+  margin: 0;
+  font-size: 1.35rem;
+  font-weight: 600;
+}
+
+.top-nav nav {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.top-nav nav a {
+  font-size: 0.95rem;
+  padding: 0.25rem 0.5rem;
+  border-radius: 999px;
+}
+
+.top-nav nav a.active {
+  background: #2563eb;
+  color: #ffffff;
+}
+
+/* =======================
+   LAYOUT: GENERIC PAGE
+   ======================= */
+
+.page-container {
+  max-width: 960px;
+  margin: 32px auto 40px;
+  padding: 0 16px;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: stretch;
+  gap: 24px;
+}
+
+/* Card-style sections (BREAD, etc.) */
+.card {
+  background: #ffffff;
+  border-radius: 0.9rem;
+  padding: 1.5rem 1.75rem;
+  box-shadow: 0 6px 18px rgba(15, 23, 42, 0.06);
+}
+
+.card h2 {
+  margin-top: 0;
+  margin-bottom: 0.75rem;
+  font-size: 1.25rem;
+}
+
+/* =======================
+   GLOBAL FORMS / BUTTONS
+   ======================= */
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+  margin-top: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.form-row {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  margin-bottom: 0.75rem;
+}
+
+label {
+  font-size: 0.9rem;
+  color: #374151;
+  font-weight: 500;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="number"],
+select {
+  padding: 0.55rem 0.7rem;
+  border-radius: 8px;
+  border: 1px solid #d1d5db;
+  font-size: 0.95rem;
+  outline: none;
+  background-color: #f9fafb;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease,
+    background-color 0.15s ease;
+}
+
+input:focus,
+select:focus {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 1px rgba(37, 99, 235, 0.3);
+  background-color: #ffffff;
+}
+
+/* Buttons */
+
+button,
+button[type="submit"] {
+  border: none;
+  border-radius: 999px;
+  padding: 0.55rem 1.25rem;
+  background: linear-gradient(90deg, #2563eb, #4f46e5);
+  color: #ffffff;
+  font-weight: 600;
+  font-size: 0.95rem;
+  cursor: pointer;
+  margin-top: 0.5rem;
+  transition: transform 0.08s ease, box-shadow 0.08s ease,
+    background 0.15s ease, filter 0.1s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+button:hover:not(:disabled),
+button[type="submit"]:hover:not(:disabled) {
+  filter: brightness(1.05);
+  transform: translateY(-1px);
+  box-shadow: 0 10px 20px rgba(37, 99, 235, 0.25);
+}
+
+button:active {
+  transform: translateY(0);
+  box-shadow: none;
+}
+
+button:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+/* Small action buttons in table */
+.data-table button {
+  padding: 0.25rem 0.6rem;
+  font-size: 0.8rem;
+  margin-right: 0.25rem;
+}
+
+/* =======================
+   MESSAGES
+   ======================= */
+
+.messages {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+.error-message,
+#register-error,
+#login-error {
+  color: #b91c1c;
+  font-size: 0.95rem;
+  min-height: 1.2em;
+}
+
+.success-message,
+#register-success,
+#login-success {
+  color: #15803d;
+  font-size: 0.95rem;
+  min-height: 1.2em;
+}
+
+/* =======================
+   AUTH PAGES (Register/Login)
+   ======================= */
+
+.auth-container {
+  width: 100%;
+  max-width: 420px;
+  margin: 3rem auto 1.5rem;
+  background: #ffffff;
+  border-radius: 1rem;
+  padding: 1.75rem 1.75rem 2rem;
+  box-shadow: 0 10px 25px rgba(15, 23, 42, 0.1);
+}
+
+.auth-container h1 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #111827;
+  margin-top: 0;
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+.auth-container form {
+  margin-top: 0.5rem;
+}
+
+/* =======================
+   CALCULATOR INDEX PAGE
+   ======================= */
+
+.calculator-container {
+  max-width: 420px;
+  margin: 3rem auto 1.5rem;
+  padding: 1.75rem 1.75rem 2rem;
+  background: #ffffff;
+  border-radius: 1rem;
+  box-shadow: 0 10px 25px rgba(15, 23, 42, 0.1);
+}
+
+/* =======================
+   BREAD / CALCULATIONS TABLE
+   ======================= */
+
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 0.75rem;
+  font-size: 0.9rem;
+}
+
+.data-table thead {
+  background: #eef2ff;
+}
+
+.data-table th,
+.data-table td {
+  padding: 0.5rem 0.6rem;
+  border-bottom: 1px solid #e5e7eb;
+  text-align: left;
+  vertical-align: middle;
+}
+
+.data-table th {
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.data-table tbody tr:nth-child(even) {
+  background: #f9fafb;
+}
+
+.data-table tbody tr:hover {
+  background: #eff6ff;
+}
+
+/* Details box for READ section */
+
+.details-box {
+  margin-top: 0.75rem;
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.5rem;
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  min-height: 1.5em;
+  font-size: 0.9rem;
+}
+
+/* =======================
+   RESPONSIVE
+   ======================= */
+
+@media (max-width: 640px) {
+  .top-nav {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+
+  .page-container {
+    margin-top: 1rem;
+  }
+
+  .data-table th,
+  .data-table td {
+    font-size: 0.8rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .auth-container,
+  .calculator-container {
+    padding: 1.5rem;
+  }
+
+  .auth-container h1 {
+    font-size: 1.35rem;
+  }
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 0.75rem;
+  margin-top: 0.75rem;
+}
+
+.stat-item {
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.5rem;
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+}
+
+.stat-label {
+  display: block;
+  font-size: 0.8rem;
+  color: #6b7280;
+}
+
+.stat-value {
+  display: block;
+  font-weight: 600;
+  margin-top: 0.1rem;
+  color: #111827;
+}

@@ -1,0 +1,33 @@
+<!-- app/templates/login.html -->
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Login</title>
+    <link rel="stylesheet" href="/static/styles.css" />
+  </head>
+  <body>
+    <div class="auth-container">
+      <h1>Login</h1>
+
+      <form id="login-form" novalidate>
+        <label>
+          Email
+          <input type="email" id="login-identifier" required />
+        </label>
+        <label>
+          Password
+          <input type="password" id="login-password" required />
+        </label>
+        <button type="submit">Login</button>
+      </form>
+
+      <p id="login-error" style="color: red;"></p>
+      <p id="login-success" style="color: green;"></p>
+
+      <p><a href="/register">Need an account? Register</a></p>
+    </div>
+
+    <script src="/static/auth.js"></script>
+  </body>
+</html>

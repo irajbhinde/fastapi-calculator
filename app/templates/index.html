@@ -12,7 +12,7 @@
     input { padding: 0.5rem; border-radius: 8px; border: 1px solid #ccc; width: 100%; }
     button { padding: 0.6rem 0.9rem; border: none; border-radius: 10px; cursor: pointer; }
     button:hover { filter: brightness(0.95); }
-    .ops { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.5rem; margin-top: 0.5rem; }
+    .ops { display: grid; grid-template-columns: repeat(5, 1fr); gap: 0.5rem; margin-top: 0.5rem; }
     #result { font-weight: 700; margin-top: 0.5rem; }
     .small { color: #666; font-size: 0.9rem; }
   </style>
@@ -29,10 +29,11 @@
       <button id="btn-subtract">Subtract</button>
       <button id="btn-multiply">Multiply</button>
       <button id="btn-divide">Divide</button>
+      <button id="btn-power">Power</button>
     </div>
     <div id="result" aria-live="polite"></div>
     <p class="small">Open devtools console to see network logs.</p>
   </div>
-  <script src="/static/script.js"></script>
+  <script src="/static/script.js?v=3"></script>
 </body>
 </html>

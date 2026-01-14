@@ -33,3 +33,16 @@ def test_divide_by_zero_endpoint():
     r = client.post("/divide", json={"a": 1, "b": 0})
     assert r.status_code == 400
     assert "Division by zero" in r.json()["detail"]
+
+
+def test_power_endpoint():
+    r = client.post("/power", json={"a": 10, "b": 4})
+    assert r.status_code == 200
+    assert r.json()["result"] == 10000
+
+
+def test_calculations_ui_page():
+    r = client.get("/calculations-ui")
+    assert r.status_code == 200
+    # page should contain the calculations header
+    assert "Calculation History" in r.text

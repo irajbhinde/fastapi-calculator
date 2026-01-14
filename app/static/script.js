@@ -3,6 +3,8 @@ async function callOp(endpoint) {
   const a = document.getElementById('a').value;
   const b = document.getElementById('b').value;
   const resEl = document.getElementById('result');
+  // show immediate feedback so users know something happened
+  if (resEl) resEl.textContent = 'Calculating...';
   try {
     const res = await fetch('/' + endpoint, {
       method: 'POST',
@@ -21,7 +23,22 @@ async function callOp(endpoint) {
   }
 }
 
-document.getElementById('btn-add').addEventListener('click', () => callOp('add'));
-document.getElementById('btn-subtract').addEventListener('click', () => callOp('subtract'));
-document.getElementById('btn-multiply').addEventListener('click', () => callOp('multiply'));
-document.getElementById('btn-divide').addEventListener('click', () => callOp('divide'));
+document.addEventListener('DOMContentLoaded', () => {
+  const bind = (id, endpoint) => {
+    const el = document.getElementById(id);
+    if (!el) {
+      console.warn(`Element #${id} not found, skipping binding for ${endpoint}`);
+      return;
+    }
+    el.addEventListener('click', () => {
+      console.debug(`clicked ${id} -> calling ${endpoint}`);
+      callOp(endpoint);
+    });
+  };
+
+  bind('btn-add', 'add');
+  bind('btn-subtract', 'subtract');
+  bind('btn-multiply', 'multiply');
+  bind('btn-divide', 'divide');
+  bind('btn-power', 'power');
+});

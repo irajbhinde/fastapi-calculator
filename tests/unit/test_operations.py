@@ -1,7 +1,7 @@
 
 import math
 import pytest
-from app.operations import add, subtract, multiply, divide
+from app.operations import add, subtract, multiply, divide, power
 
 @pytest.mark.parametrize("a,b,expected", [
     (1, 2, 3),
@@ -42,6 +42,16 @@ def test_divide(a, b, expected):
 def test_divide_by_zero():
     with pytest.raises(ZeroDivisionError):
         divide(1, 0)
+
+
+@pytest.mark.parametrize("a,b,expected", [
+    (2, 3, 8),
+    (10, 0, 1),
+    (2.5, 2, 6.25),
+    ("3", "2", 9.0),
+])
+def test_power(a, b, expected):
+    assert power(a, b) == pytest.approx(expected)
 
 @pytest.mark.parametrize("func", [add, subtract, multiply, divide])
 def test_invalid_input(func):

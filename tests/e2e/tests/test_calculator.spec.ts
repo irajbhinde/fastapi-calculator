@@ -20,4 +20,7 @@ test('calculator end-to-end operations', async ({ page }) => {
 
   await page.click('#btn-divide');
   await expect(result).toContainText('Result: 2.5');
+
+  await page.click('#btn-power');
+  await expect(result).toContainText('Result: 10000');
 });
